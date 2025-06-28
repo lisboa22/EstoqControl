@@ -6,11 +6,8 @@ package aplicacao;
 
 import dao.DAOFactory;
 import dao.UsuarioDAO;
-import javax.swing.JFrame;
-import javax.swing.table.DefaultTableModel;
 import modelo.Usuario;
-import aplicacao.frmUsuarioEditar;
-import dao.DAOGenerico;
+import java.awt.event.KeyEvent;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import javax.swing.JOptionPane;
@@ -22,6 +19,9 @@ import javax.swing.RowFilter;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+
+
+
 /**
  *
  * @author robson
@@ -31,6 +31,13 @@ public class frmUsuario extends javax.swing.JFrame {
     UsuarioDAO usuarioDAO = DAOFactory.criarUsuarioDAO();
     DefaultTableModel modelo = null;
     private int idUsuario;
+    private int linhaSelecionada;
+    private String tNome;
+    private String tUsuario;
+    private String tEmail;
+    private String tCelular;
+    private String tFuncao;
+    private String tSenha;
 
     
     /*
@@ -40,6 +47,27 @@ public class frmUsuario extends javax.swing.JFrame {
     public frmUsuario() {
         initComponents();
         
+        // Define um modelo de tabela que não permite edição de células
+        modelo = new DefaultTableModel(
+            new Object[][]{},
+            new String[]{"ID", "Nome", "Usuário", "Email", "Celular", "Função", "Data"}
+        ) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Bloqueia edição em todas as células
+            }
+        };
+        tblUsuario.setModel(modelo);
+        tblUsuario.setColumnSelectionAllowed(false);
+        tblUsuario.isCellEditable(linhaSelecionada, 0);
+
+        try {
+            tblUsuario.getColumnModel().getColumn(2).setCellRenderer(new CustomRenderer());
+        } catch (Exception ex) {
+            System.out.println("Erro ao configurar renderizador.");
+        }
+        
+        //Configura renderização personalizada para coluna de valores monetários
         try {
             modelo = (DefaultTableModel) tblUsuario.getModel();
             // Configura renderização personalizada para coluna de valores monetários
@@ -47,7 +75,6 @@ public class frmUsuario extends javax.swing.JFrame {
         } catch (Exception ex) {
             System.out.println("erro");
         }
-        
     }
 
     /**
@@ -135,16 +162,40 @@ public class frmUsuario extends javax.swing.JFrame {
 
         panSuperior.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
+        txtNome.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtNomeKeyPressed(evt);
+            }
+        });
+
         lblNome.setBackground(new java.awt.Color(51, 51, 51));
         lblNome.setText("NOME*");
 
+        txtUsuario.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtUsuarioKeyPressed(evt);
+            }
+        });
+
         lblUsuario.setText("USUARIO*");
+
+        txtEmail.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtEmailKeyPressed(evt);
+            }
+        });
 
         lblEmail.setText("EMAIL*");
 
         lblFuncao.setText("FUNÇÃO*");
 
         lblCelular.setText("CELULAR*");
+
+        txtFuncao.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtFuncaoKeyPressed(evt);
+            }
+        });
 
         lblTitulo.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         lblTitulo.setText("USUÁRIOS");
@@ -161,6 +212,11 @@ public class frmUsuario extends javax.swing.JFrame {
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
+        ftxtCelular.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                ftxtCelularKeyPressed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panSuperiorLayout = new javax.swing.GroupLayout(panSuperior);
         panSuperior.setLayout(panSuperiorLayout);
@@ -252,6 +308,8 @@ public class frmUsuario extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
+        tblUsuario.setCellSelectionEnabled(true);
+        tblUsuario.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tblUsuario.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblUsuarioMouseClicked(evt);
@@ -278,6 +336,11 @@ public class frmUsuario extends javax.swing.JFrame {
         btnEditar.setText("Editar");
         btnEditar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnEditar.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnEditar.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                btnEditarFocusGained(evt);
+            }
+        });
         btnEditar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEditarActionPerformed(evt);
@@ -343,7 +406,7 @@ public class frmUsuario extends javax.swing.JFrame {
             panInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panInferiorLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(panInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnInserir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -386,7 +449,7 @@ public class frmUsuario extends javax.swing.JFrame {
      * Atualiza a tabela de usuários e aplica filtro de busca.
      */
     private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
-        this.preencherTabela();
+        preencherTabela();
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(modelo);
         tblUsuario.setRowSorter(sorter);
         
@@ -487,8 +550,9 @@ public class frmUsuario extends javax.swing.JFrame {
                 txtFuncao.setText("");
                 ptxtSenha.setText("");
                 txtNome.requestFocus();
-            }
-        } catch (Exception ex) {
+                preencherTabela(); 
+            } 
+        } catch (Exception ex) {    
             JOptionPane.showMessageDialog(this, "Erro ao Inserir!");
         }
     }//GEN-LAST:event_btnInserirActionPerformed
@@ -512,7 +576,7 @@ public class frmUsuario extends javax.swing.JFrame {
             //System.out.println(""+id);
         }*/
         
-        int linhaSelecionada = tblUsuario.getSelectedRow();
+        linhaSelecionada = tblUsuario.getSelectedRow();
         if (linhaSelecionada != -1) {
             // Suponha que o ID esteja na primeira coluna (índice 0)
             Object idObj = tblUsuario.getValueAt(linhaSelecionada, 0);
@@ -523,7 +587,6 @@ public class frmUsuario extends javax.swing.JFrame {
         
         Object idObj = tblUsuario.getValueAt(linhaSelecionada, 0);
         idUsuario = Integer.parseInt(idObj.toString());
-        
         carregarUsuario(idUsuario);
     }//GEN-LAST:event_tblUsuarioMouseClicked
 
@@ -533,27 +596,22 @@ public class frmUsuario extends javax.swing.JFrame {
      */
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
         try {
-            int linhaSelecionada = tblUsuario.getSelectedRow();
+            linhaSelecionada = tblUsuario.getSelectedRow();
+            System.out.println(""+linhaSelecionada);
             if (linhaSelecionada != -1) {
                 // Suponha que o ID esteja na primeira coluna (índice 0)
                 Object idObj = tblUsuario.getValueAt(linhaSelecionada, 0);
                 if (idObj != null) {
                     idUsuario = Integer.parseInt(idObj.toString());
                 }
+            } else {
+                JOptionPane.showMessageDialog(this, "Para Editar selecione a linha desejada!");
+                return;
             }
-        
-            Object idObj = tblUsuario.getValueAt(linhaSelecionada, 0);
-            idUsuario = Integer.parseInt(idObj.toString());
-            /*
-            frmUsuarioEditar fEditar = new frmUsuarioEditar(idUsuario);
-            fEditar.setVisible(true);
-            frmUsuario.this.setVisible(false);*/
         }catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Para Editar selecione a linha desejada!");
             return;
         }
-        
-        
         
         float numero = 0;
         if (txtNome.getText().isEmpty()) {
@@ -580,6 +638,18 @@ public class frmUsuario extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Informe a senha");
             return;
         }
+        
+        if (txtNome.getText().equals(tNome) && txtUsuario.getText().equals(tUsuario) && txtEmail.getText().equals(tEmail) && ftxtCelular.getText().equals(tCelular) && txtFuncao.getText().equals(tFuncao) && ptxtSenha.getText().equals(tSenha)){
+            JOptionPane.showMessageDialog(this, "Não houve alteração nos dados acima!");
+            
+           /* try {
+                Thread.sleep(2000); // pausa de 2 segundos
+            } catch (InterruptedException e) {
+                e.printStackTrace(); // ou tratar de outra forma, como ignorar
+            }*/
+    
+            return;
+        }
 
         try {
             // Cria o objeto Usuario com os dados dos campos
@@ -598,34 +668,37 @@ public class frmUsuario extends javax.swing.JFrame {
 
             if (resultado > 0) {
                 JOptionPane.showMessageDialog(null, "Usuário atualizado com sucesso.");
+                txtNome.setText("");
+                txtUsuario.setText("");
+                txtEmail.setText("");
+                ftxtCelular.setText("");
+                txtFuncao.setText("");
+                ptxtSenha.setText("");
+                txtNome.requestFocus();
             } else {
                 JOptionPane.showMessageDialog(null, "Falha ao atualizar o usuário.");
             }
+             
         } catch (Exception ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(null, "Erro ao atualizar: " + ex.getMessage());
-        }
-        
-        txtNome.setText("");
-        txtUsuario.setText("");
-        txtEmail.setText("");
-        ftxtCelular.setText("");
-        txtFuncao.setText("");
-        ptxtSenha.setText("");
-        txtNome.requestFocus();
-        
-        /*new frmUsuario().setVisible(true); 
-        this.dispose(); */
-        
+        }     
     }//GEN-LAST:event_btnEditarActionPerformed
 
+    private void restaurarSelecaoTabela(int linha) {
+        //preencherTabela();
+        if (linha >= 0 && linha < tblUsuario.getRowCount()) {
+            tblUsuario.setRowSelectionInterval(linha, linha);
+            tblUsuario.scrollRectToVisible(tblUsuario.getCellRect(linha, 0, true));
+        }
+    }
     /**
      * Apaga o usuário selecionado na tabela após confirmação.
      * Trata erros de integridade e exibe mensagens apropriadas.
      */
     private void btnApagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApagarActionPerformed
         try{
-            int linhaSelecionada = tblUsuario.getSelectedRow();
+            linhaSelecionada = tblUsuario.getSelectedRow();
             if (linhaSelecionada != -1) {
                 // Suponha que o ID esteja na primeira coluna (índice 0)
                 Object idObj = tblUsuario.getValueAt(linhaSelecionada, 0);
@@ -658,9 +731,6 @@ public class frmUsuario extends javax.swing.JFrame {
                     ex.printStackTrace();
                     JOptionPane.showMessageDialog(null, "Erro ao excluir o usuário: " + ex.getMessage());
                 }
-                
-                //new frmUsuario().setVisible(true); 
-                //this.dispose();
                 return;
             }
         } catch (Exception ex) {
@@ -678,6 +748,36 @@ public class frmUsuario extends javax.swing.JFrame {
         txtNome.requestFocus();
     }//GEN-LAST:event_btnLimparActionPerformed
 
+    private void txtNomeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNomeKeyPressed
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER)
+            txtUsuario.requestFocus();
+    }//GEN-LAST:event_txtNomeKeyPressed
+
+    private void txtUsuarioKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUsuarioKeyPressed
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER)
+            txtEmail.requestFocus();        // TODO add your handling code here:
+    }//GEN-LAST:event_txtUsuarioKeyPressed
+
+    private void txtEmailKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtEmailKeyPressed
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER)
+            ftxtCelular.requestFocus();        // TODO add your handling code here:
+    }//GEN-LAST:event_txtEmailKeyPressed
+
+    private void ftxtCelularKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ftxtCelularKeyPressed
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER)
+            txtFuncao.requestFocus();        // TODO add your handling code here:
+    }//GEN-LAST:event_ftxtCelularKeyPressed
+
+    private void txtFuncaoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFuncaoKeyPressed
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER)
+            ptxtSenha.requestFocus();        // TODO add your handling code here:
+    }//GEN-LAST:event_txtFuncaoKeyPressed
+
+    private void btnEditarFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_btnEditarFocusGained
+        if (!txtNome.getText().isEmpty())
+            restaurarSelecaoTabela(linhaSelecionada);
+    }//GEN-LAST:event_btnEditarFocusGained
+
     private void carregarUsuario(int id) {
         UsuarioDAO usuarioDAO = DAOFactory.criarUsuarioDAO();
         Usuario usuario = usuarioDAO.listar(id); // chama a função que você forneceu
@@ -689,6 +789,13 @@ public class frmUsuario extends javax.swing.JFrame {
             ftxtCelular.setText(usuario.getCelular());
             txtFuncao.setText(usuario.getFuncao());
             ptxtSenha.setText(usuario.getSenha());
+            
+            tNome = txtNome.getText();
+            tUsuario = txtUsuario.getText();
+            tEmail = txtEmail.getText();
+            tCelular = ftxtCelular.getText();
+            tFuncao = txtFuncao.getText();
+            tSenha = ptxtSenha.getText();
         } else {
             JOptionPane.showMessageDialog(this, "Usuário não encontrado.");
         }

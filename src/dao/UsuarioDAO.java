@@ -14,7 +14,7 @@ import java.sql.SQLException;
  * @author robson
  */
 public interface UsuarioDAO {
-    public int inserir(Usuario usuario);
+    public int inserir(Usuario usuario) throws ClassNotFoundException, SQLException, SQLIntegrityConstraintViolationException;
     public List<Usuario> listar();
     public Usuario listar(int id);
     public int editar(Usuario usuario);

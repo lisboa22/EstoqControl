@@ -10,6 +10,13 @@ import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.sql.SQLException;
 
 
 /**
@@ -22,7 +29,7 @@ public class UsuarioDAOJDBC implements UsuarioDAO{
     
     //Inserir Usuário
     @Override
-    public int inserir(Usuario usuario) {
+    public int inserir(Usuario usuario) throws ClassNotFoundException, SQLException, SQLIntegrityConstraintViolationException {
         StringBuilder sqlBuilder = new StringBuilder();
         sqlBuilder
                 .append("insert into usuarios(nome, usuario, email, celular, funcao, senha, data) ")
@@ -39,8 +46,12 @@ public class UsuarioDAOJDBC implements UsuarioDAO{
                                                         usuario.getSenha(),
                                                         usuario.getData()
                                                         );
+        } catch (SQLIntegrityConstraintViolationException ex) {
+            JOptionPane.showMessageDialog(null, "Não é possível inserir: o email já está vinculado a outro Usuário.");      
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "bNão é possível inserir: o email já está vinculado a outro Usuário.");      
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         
         return linha;
