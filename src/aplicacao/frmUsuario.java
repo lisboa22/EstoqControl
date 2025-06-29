@@ -5,6 +5,7 @@
 package aplicacao;
 
 import dao.DAOFactory;
+import dao.PermissaoDAO;
 import dao.UsuarioDAO;
 import modelo.Usuario;
 import java.awt.event.KeyEvent;
@@ -12,12 +13,17 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import javax.swing.JOptionPane;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import javax.swing.JComboBox;
 import javax.swing.table.TableRowSorter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.RowFilter;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import modelo.Permissao;
+
 
 
 
@@ -36,9 +42,16 @@ public class frmUsuario extends javax.swing.JFrame {
     private String tUsuario;
     private String tEmail;
     private String tCelular;
-    private String tFuncao;
+    private int tidPermissao;
     private String tSenha;
+    private int idPermissao;
 
+     
+    PermissaoDAO permissaoDAO = DAOFactory.criarPermissaoDAO();
+    
+    // Pegue a lista de permissões
+        List<Permissao> permissoes = permissaoDAO.listar();
+        
     
     /*
      * Construtor da classe frmUsuario.
@@ -50,7 +63,7 @@ public class frmUsuario extends javax.swing.JFrame {
         // Define um modelo de tabela que não permite edição de células
         modelo = new DefaultTableModel(
             new Object[][]{},
-            new String[]{"ID", "Nome", "Usuário", "Email", "Celular", "Função", "Data"}
+            new String[]{"ID", "Nome", "Usuário", "Email", "Celular", "Permissão", "Data"}
         ) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -75,6 +88,18 @@ public class frmUsuario extends javax.swing.JFrame {
         } catch (Exception ex) {
             System.out.println("erro");
         }
+        
+
+        // Pegue a lista de permissões
+        //List<Permissao> permissoes = permissaoDAO.listar();
+        
+        //Limpa combobox
+        cmbPermissao.removeAllItems();
+        
+        for (Permissao p : permissoes) {
+            String permissao = p.getPermissao();
+            cmbPermissao.addItem(permissao);
+        }
     }
 
     /**
@@ -98,7 +123,7 @@ public class frmUsuario extends javax.swing.JFrame {
                                            usuario.getUsuario(),
                                            usuario.getEmail(),
                                            usuario.getCelular(),
-                                           usuario.getFuncao(),
+                                           usuario.getidPermissao(),
                                            //usuario.getSenha(),
                                            dataFormatada});
             }
@@ -128,13 +153,13 @@ public class frmUsuario extends javax.swing.JFrame {
         lblEmail = new javax.swing.JLabel();
         lblFuncao = new javax.swing.JLabel();
         lblCelular = new javax.swing.JLabel();
-        txtFuncao = new javax.swing.JTextField();
         lblTitulo = new javax.swing.JLabel();
         lblPesquisa = new javax.swing.JLabel();
         txtBusca = new javax.swing.JTextField();
         lblSenha = new javax.swing.JLabel();
         ftxtCelular = new javax.swing.JFormattedTextField();
         ptxtSenha = new javax.swing.JPasswordField();
+        cmbPermissao = new javax.swing.JComboBox<>();
         panInferior = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblUsuario = new javax.swing.JTable();
@@ -191,12 +216,6 @@ public class frmUsuario extends javax.swing.JFrame {
 
         lblCelular.setText("CELULAR*");
 
-        txtFuncao.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                txtFuncaoKeyPressed(evt);
-            }
-        });
-
         lblTitulo.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         lblTitulo.setText("USUÁRIOS");
 
@@ -218,6 +237,12 @@ public class frmUsuario extends javax.swing.JFrame {
             }
         });
 
+        cmbPermissao.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                cmbPermissaoKeyPressed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panSuperiorLayout = new javax.swing.GroupLayout(panSuperior);
         panSuperior.setLayout(panSuperiorLayout);
         panSuperiorLayout.setHorizontalGroup(
@@ -233,18 +258,18 @@ public class frmUsuario extends javax.swing.JFrame {
                         .addGroup(panSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblCelular, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(ftxtCelular, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                             .addComponent(lblFuncao, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtFuncao, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(cmbPermissao, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -283,9 +308,9 @@ public class frmUsuario extends javax.swing.JFrame {
                     .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtFuncao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ftxtCelular, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ptxtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ptxtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmbPermissao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -507,9 +532,9 @@ public class frmUsuario extends javax.swing.JFrame {
             ftxtCelular.requestFocus();
             return;
         }
-        if (txtFuncao.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Informe a função");
-            txtFuncao.requestFocus();
+        if (cmbPermissao.getSelectedItem().toString().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Informe a permissão");
+            cmbPermissao.requestFocus();
             return;
         }
         if (ptxtSenha.getText().isEmpty()) {
@@ -530,13 +555,22 @@ public class frmUsuario extends javax.swing.JFrame {
             }
         }
         */
-        try {
+        
+        for (Permissao p : permissoes) {
+            if (p.getPermissao().equalsIgnoreCase(cmbPermissao.getSelectedItem().toString())) {
+                idPermissao = p.getId();
+                break; // achou, pode parar
+            }
+        }
+        
+        
+        try {       
             Usuario usuario = new Usuario();
             usuario.setNome(txtNome.getText());
             usuario.setUsuario(txtUsuario.getText());
             usuario.setEmail(txtEmail.getText());
             usuario.setCelular(ftxtCelular.getText());
-            usuario.setFuncao(txtFuncao.getText());
+            usuario.setidPermissao(idPermissao);
             usuario.setSenha(ptxtSenha.getText());
             usuario.setData(new Date());
                  
@@ -547,7 +581,7 @@ public class frmUsuario extends javax.swing.JFrame {
                 txtUsuario.setText("");
                 txtEmail.setText("");
                 ftxtCelular.setText("");
-                txtFuncao.setText("");
+                //cmbPermissao.setText("");
                 ptxtSenha.setText("");
                 txtNome.requestFocus();
                 preencherTabela(); 
@@ -630,7 +664,7 @@ public class frmUsuario extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Informe o celular");
             return;
         }
-        if (txtFuncao.getText().isEmpty()) {
+        if (cmbPermissao.getSelectedItem().toString().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Informe a função");
             return;
         }
@@ -639,7 +673,7 @@ public class frmUsuario extends javax.swing.JFrame {
             return;
         }
         
-        if (txtNome.getText().equals(tNome) && txtUsuario.getText().equals(tUsuario) && txtEmail.getText().equals(tEmail) && ftxtCelular.getText().equals(tCelular) && txtFuncao.getText().equals(tFuncao) && ptxtSenha.getText().equals(tSenha)){
+        if (txtNome.getText().equals(tNome) && txtUsuario.getText().equals(tUsuario) && txtEmail.getText().equals(tEmail) && ftxtCelular.getText().equals(tCelular) && cmbPermissao.getSelectedItem().toString().equals(tidPermissao) && ptxtSenha.getText().equals(tSenha)){
             JOptionPane.showMessageDialog(this, "Não houve alteração nos dados acima!");
             
            /* try {
@@ -650,6 +684,13 @@ public class frmUsuario extends javax.swing.JFrame {
     
             return;
         }
+        
+        for (Permissao p : permissoes) {
+            if (p.getPermissao().equalsIgnoreCase(cmbPermissao.getSelectedItem().toString())) {
+                idPermissao = p.getId();
+                break; // achou, pode parar
+            }
+        }
 
         try {
             // Cria o objeto Usuario com os dados dos campos
@@ -659,7 +700,7 @@ public class frmUsuario extends javax.swing.JFrame {
             usuario.setUsuario(txtUsuario.getText());
             usuario.setEmail(txtEmail.getText());
             usuario.setCelular(ftxtCelular.getText());
-            usuario.setFuncao(txtFuncao.getText());
+            usuario.setidPermissao(idPermissao);
             usuario.setSenha(ptxtSenha.getText()); // Se houver campo senha
 
             // Chama a função editar
@@ -672,7 +713,7 @@ public class frmUsuario extends javax.swing.JFrame {
                 txtUsuario.setText("");
                 txtEmail.setText("");
                 ftxtCelular.setText("");
-                txtFuncao.setText("");
+                //txtFuncao.setText("");
                 ptxtSenha.setText("");
                 txtNome.requestFocus();
             } else {
@@ -743,7 +784,7 @@ public class frmUsuario extends javax.swing.JFrame {
         txtUsuario.setText("");
         txtEmail.setText("");
         ftxtCelular.setText("");
-        txtFuncao.setText("");
+        //txtFuncao.setText("");
         ptxtSenha.setText("");
         txtNome.requestFocus();
     }//GEN-LAST:event_btnLimparActionPerformed
@@ -765,36 +806,42 @@ public class frmUsuario extends javax.swing.JFrame {
 
     private void ftxtCelularKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ftxtCelularKeyPressed
         if(evt.getKeyCode() == KeyEvent.VK_ENTER)
-            txtFuncao.requestFocus();        // TODO add your handling code here:
+            cmbPermissao.requestFocus();        // TODO add your handling code here:
     }//GEN-LAST:event_ftxtCelularKeyPressed
-
-    private void txtFuncaoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFuncaoKeyPressed
-        if(evt.getKeyCode() == KeyEvent.VK_ENTER)
-            ptxtSenha.requestFocus();        // TODO add your handling code here:
-    }//GEN-LAST:event_txtFuncaoKeyPressed
 
     private void btnEditarFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_btnEditarFocusGained
         if (!txtNome.getText().isEmpty())
             restaurarSelecaoTabela(linhaSelecionada);
     }//GEN-LAST:event_btnEditarFocusGained
 
+    private void cmbPermissaoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbPermissaoKeyPressed
+        ptxtSenha.requestFocus();
+    }//GEN-LAST:event_cmbPermissaoKeyPressed
+
     private void carregarUsuario(int id) {
         UsuarioDAO usuarioDAO = DAOFactory.criarUsuarioDAO();
         Usuario usuario = usuarioDAO.listar(id); // chama a função que você forneceu
-
+        
+        for (Permissao p : permissoes) {
+            if (p.getPermissao().equalsIgnoreCase(cmbPermissao.getSelectedItem().toString())) {
+                idPermissao = p.getId();
+                break; // achou, pode parar
+            }
+        }
+        
         if (usuario != null) {
             txtNome.setText(usuario.getNome());
             txtUsuario.setText(usuario.getUsuario());
             txtEmail.setText(usuario.getEmail());
             ftxtCelular.setText(usuario.getCelular());
-            txtFuncao.setText(usuario.getFuncao());
+            //cmbPermissao.setText(usuario.getFuncao());
             ptxtSenha.setText(usuario.getSenha());
             
             tNome = txtNome.getText();
             tUsuario = txtUsuario.getText();
             tEmail = txtEmail.getText();
             tCelular = ftxtCelular.getText();
-            tFuncao = txtFuncao.getText();
+            tidPermissao = idPermissao;
             tSenha = ptxtSenha.getText();
         } else {
             JOptionPane.showMessageDialog(this, "Usuário não encontrado.");
@@ -842,6 +889,7 @@ public class frmUsuario extends javax.swing.JFrame {
     private javax.swing.JButton btnInserir;
     private javax.swing.JButton btnLimpar;
     private javax.swing.JButton btnVoltar;
+    private javax.swing.JComboBox<String> cmbPermissao;
     private javax.swing.JFormattedTextField ftxtCelular;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblCelular;
@@ -858,7 +906,6 @@ public class frmUsuario extends javax.swing.JFrame {
     private javax.swing.JTable tblUsuario;
     private javax.swing.JTextField txtBusca;
     private javax.swing.JTextField txtEmail;
-    private javax.swing.JTextField txtFuncao;
     private javax.swing.JTextField txtNome;
     private javax.swing.JTextField txtUsuario;
     // End of variables declaration//GEN-END:variables

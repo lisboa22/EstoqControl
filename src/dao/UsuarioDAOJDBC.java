@@ -32,9 +32,8 @@ public class UsuarioDAOJDBC implements UsuarioDAO{
     public int inserir(Usuario usuario) throws ClassNotFoundException, SQLException, SQLIntegrityConstraintViolationException {
         StringBuilder sqlBuilder = new StringBuilder();
         sqlBuilder
-                .append("insert into usuarios(nome, usuario, email, celular, funcao, senha, data) ")
+                .append("insert into usuarios(nome, usuario, email, celular, id_permissao, senha, data) ")
                 .append("VALUES (?, ?, ?, ?, ?, ?, ?)");
-     
         String insert = sqlBuilder.toString();
         int linha = 0;
         try {  
@@ -42,16 +41,18 @@ public class UsuarioDAOJDBC implements UsuarioDAO{
                                                         usuario.getUsuario(),
                                                         usuario.getEmail(),
                                                         usuario.getCelular(),
-                                                        usuario.getFuncao(),
+                                                        usuario.getidPermissao(),
                                                         usuario.getSenha(),
                                                         usuario.getData()
                                                         );
         } catch (SQLIntegrityConstraintViolationException ex) {
             JOptionPane.showMessageDialog(null, "Não é possível inserir: o email já está vinculado a outro Usuário.");      
+            //ex.printStackTrace();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "bNão é possível inserir: o email já está vinculado a outro Usuário.");      
-        } catch (Exception e) {
-            //e.printStackTrace();
+            //ex.printStackTrace();
+        } catch (Exception ex) {
+            //ex.printStackTrace();
         }
         
         return linha;
@@ -72,7 +73,7 @@ public class UsuarioDAOJDBC implements UsuarioDAO{
                 usuario.setUsuario(rset.getString("usuario"));
                 usuario.setEmail(rset.getString("email"));
                 usuario.setCelular(rset.getString("celular"));
-                usuario.setFuncao(rset.getString("funcao"));
+                usuario.setidPermissao(rset.getInt("id_permissao"));
                 usuario.setSenha(rset.getString("senha"));
                 usuario.setData(rset.getDate("data"));
                 usuarios.add(usuario);
@@ -99,7 +100,7 @@ public class UsuarioDAOJDBC implements UsuarioDAO{
                 usuario.setUsuario(rset.getString("usuario"));
                 usuario.setEmail(rset.getString("email"));
                 usuario.setCelular(rset.getString("celular"));
-                usuario.setFuncao(rset.getString("funcao"));
+                usuario.setidPermissao(rset.getInt("id_permissao"));
                 usuario.setSenha(rset.getString("senha"));
                 usuario.setData(rset.getDate("data"));
             }
@@ -119,7 +120,7 @@ public class UsuarioDAOJDBC implements UsuarioDAO{
                 .append("usuario = ?, ")
                 .append("email = ?, ")
                 .append("celular = ?, ")
-                .append("funcao = ?, ")
+                .append("id_permissao = ?, ")
                 .append("senha = ? ")
                 .append("WHERE id = ?");
         String update = sqlBuilder.toString();
@@ -129,7 +130,7 @@ public class UsuarioDAOJDBC implements UsuarioDAO{
                                                         usuario.getUsuario(),
                                                         usuario.getEmail(),
                                                         usuario.getCelular(),
-                                                        usuario.getFuncao(),
+                                                        usuario.getidPermissao(),
                                                         usuario.getSenha(),
                                                         usuario.getId());
         } catch (Exception e) { 
