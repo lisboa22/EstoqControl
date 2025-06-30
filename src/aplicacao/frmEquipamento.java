@@ -5,7 +5,9 @@
 package aplicacao;
 
 import dao.DAOFactory;
-import dao.PermissaoDAO;
+import dao.FabricanteDAO;
+import dao.EquipamentoDAO;
+import modelo.Equipamento;
 import java.awt.event.KeyEvent;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -20,7 +22,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.RowFilter;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import modelo.Permissao;
+import modelo.Fabricante;
 
 
 
@@ -30,49 +32,71 @@ import modelo.Permissao;
  *
  * @author robson
  */
-public class frmPermissao extends javax.swing.JFrame {
+public class frmEquipamento extends javax.swing.JFrame {
     
-    PermissaoDAO permissaoDAO = DAOFactory.criarPermissaoDAO();
+    EquipamentoDAO equipamentoDAO = DAOFactory.criarEquipamentoDAO();
     DefaultTableModel modelo = null;
-    private int idPermissao;
+    private int idEquipamento;
     private int linhaSelecionada;
-    private String tPermissao;
+    private String tEquipamento;
+    private String tNumeroserie;
+    private int tIdfabricante;
+    private int idFabricante;
+
+     
+    FabricanteDAO fabricanteDAO = DAOFactory.criarFabricanteDAO();
+    
+    // Pegue a lista de permissões
+        List<Fabricante> fabricantes = fabricanteDAO.listar();
         
+    
     /*
-     * Construtor da classe frmUsuario.
+     * Construtor da classe frmEquipamento.
      * Inicializa os componentes da interface e configura a tabela de usuários.
      */
-    public frmPermissao() {
+    public frmEquipamento() {
         initComponents();
         
         // Define um modelo de tabela que não permite edição de células
         modelo = new DefaultTableModel(
             new Object[][]{},
-            new String[]{"ID", "Permissão", "Data"}
+            new String[]{"ID", "EQUIPAMENTO", "NÚMERO SÉRIE", "ID FABRICANTE", "DATA"}
         ) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false; // Bloqueia edição em todas as células
             }
         };
-        tblPermissao.setModel(modelo);
-        tblPermissao.setColumnSelectionAllowed(false);
-        tblPermissao.isCellEditable(linhaSelecionada, 0);
+        tblEquipamento.setModel(modelo);
+        tblEquipamento.setColumnSelectionAllowed(false);
+        tblEquipamento.isCellEditable(linhaSelecionada, 0);
 
         try {
-            tblPermissao.getColumnModel().getColumn(2).setCellRenderer(new CustomRenderer());
+            tblEquipamento.getColumnModel().getColumn(2).setCellRenderer(new CustomRenderer());
         } catch (Exception ex) {
             System.out.println("Erro ao configurar renderizador.");
         }
         
         //Configura renderização personalizada para coluna de valores monetários
         try {
-            modelo = (DefaultTableModel) tblPermissao.getModel();
+            modelo = (DefaultTableModel) tblEquipamento.getModel();
             // Configura renderização personalizada para coluna de valores monetários
-            tblPermissao.getColumnModel().getColumn(2).setCellRenderer(new CustomRenderer());
+            tblEquipamento.getColumnModel().getColumn(2).setCellRenderer(new CustomRenderer());
         } catch (Exception ex) {
             System.out.println("erro");
-        } 
+        }
+        
+
+        // Pegue a lista de permissões
+        //List<Fabricante> fabricantes = fabricanteDAO.listar();
+        
+        //Limpa combobox
+        cmbIdfabricante.removeAllItems();
+        
+        for (Fabricante p : fabricantes) {
+            String fabricante = p.getFabricante();
+            cmbIdfabricante.addItem(fabricante);
+        }
     }
 
     /**
@@ -84,15 +108,17 @@ public class frmPermissao extends javax.swing.JFrame {
         DateFormat formatador = new SimpleDateFormat("dd/MM/yyyy");
         
         try {
-            for (Permissao permissao : permissaoDAO.listar()) {
+            for (Equipamento equipamento : equipamentoDAO.listar()) {
                 
                 String dataFormatada = "";
-                if (permissao.getData() != null) {
-                    dataFormatada = formatador.format(permissao.getData());
+                if (equipamento.getData() != null) {
+                    dataFormatada = formatador.format(equipamento.getData());
                 }
             
-                modelo.addRow(new Object[]{permissao.getId(),
-                                           permissao.getPermissao(),
+                modelo.addRow(new Object[]{equipamento.getId(),
+                                           equipamento.getEquipamento(),
+                                           equipamento.getNumero_serie(),
+                                           equipamento.getId_fabricante(),
                                            dataFormatada});
             }
         } catch (Exception e) {
@@ -113,14 +139,18 @@ public class frmPermissao extends javax.swing.JFrame {
     private void initComponents() {
 
         panSuperior = new javax.swing.JPanel();
-        txtPermissao = new javax.swing.JTextField();
-        lblPermissao = new javax.swing.JLabel();
+        txtEquipamento = new javax.swing.JTextField();
+        lblEquipamento = new javax.swing.JLabel();
+        txtNserie = new javax.swing.JTextField();
+        lblNserie = new javax.swing.JLabel();
+        lblIdfabricante = new javax.swing.JLabel();
         lblTitulo = new javax.swing.JLabel();
         lblPesquisa = new javax.swing.JLabel();
         txtBusca = new javax.swing.JTextField();
+        cmbIdfabricante = new javax.swing.JComboBox<>();
         panInferior = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblPermissao = new javax.swing.JTable();
+        tblEquipamento = new javax.swing.JTable();
         btnInserir = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
         btnApagar = new javax.swing.JButton();
@@ -128,7 +158,7 @@ public class frmPermissao extends javax.swing.JFrame {
         btnLimpar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("EstoqControl - Permissões");
+        setTitle("EstoqControl - Usuários");
         setResizable(false);
         addWindowFocusListener(new java.awt.event.WindowFocusListener() {
             public void windowGainedFocus(java.awt.event.WindowEvent evt) {
@@ -145,22 +175,38 @@ public class frmPermissao extends javax.swing.JFrame {
 
         panSuperior.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        txtPermissao.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtEquipamento.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                txtPermissaoKeyPressed(evt);
+                txtEquipamentoKeyPressed(evt);
             }
         });
 
-        lblPermissao.setBackground(new java.awt.Color(51, 51, 51));
-        lblPermissao.setText("PERMISSÃO*");
+        lblEquipamento.setBackground(new java.awt.Color(51, 51, 51));
+        lblEquipamento.setText("EQUIPAMENTO*");
+
+        txtNserie.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtNserieKeyPressed(evt);
+            }
+        });
+
+        lblNserie.setText("NUMERO SÉRIE*");
+
+        lblIdfabricante.setText("FUNÇÃO*");
 
         lblTitulo.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        lblTitulo.setText("PERMISSÕES");
+        lblTitulo.setText("EQUIPAMENTOS");
 
         lblPesquisa.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         lblPesquisa.setText("Digite o nome:");
 
         txtBusca.setToolTipText("Digite o que deseja pesquisar...");
+
+        cmbIdfabricante.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                cmbIdfabricanteKeyPressed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panSuperiorLayout = new javax.swing.GroupLayout(panSuperior);
         panSuperior.setLayout(panSuperiorLayout);
@@ -171,64 +217,77 @@ public class frmPermissao extends javax.swing.JFrame {
                 .addGroup(panSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panSuperiorLayout.createSequentialGroup()
                         .addGroup(panSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblPermissao, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtPermissao, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(lblEquipamento, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtEquipamento, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblNserie, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtNserie, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                            .addComponent(lblIdfabricante, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cmbIdfabricante, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(773, 773, 773))
                     .addGroup(panSuperiorLayout.createSequentialGroup()
                         .addComponent(lblPesquisa, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtBusca)))
-                .addContainerGap())
+                        .addComponent(txtBusca, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
             .addGroup(panSuperiorLayout.createSequentialGroup()
-                .addGap(204, 204, 204)
+                .addGap(277, 277, 277)
                 .addComponent(lblTitulo)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         panSuperiorLayout.setVerticalGroup(
             panSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panSuperiorLayout.createSequentialGroup()
-                .addContainerGap()
                 .addComponent(lblTitulo)
-                .addGap(5, 5, 5)
+                .addGap(11, 11, 11)
                 .addGroup(panSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtBusca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblPesquisa))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblPermissao)
+                .addGroup(panSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblEquipamento)
+                    .addComponent(lblNserie)
+                    .addComponent(lblIdfabricante))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtPermissao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(panSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtEquipamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtNserie, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmbIdfabricante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
-        tblPermissao.setModel(new javax.swing.table.DefaultTableModel(
+        tblEquipamento.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "ID", "PERMISSÃO", "DATA"
+                "ID", "EQUIPAMENTO", "NUMERO SERIE", "ID FABRICANTE", "DATA"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.Object.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Object.class
             };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
         });
-        tblPermissao.setColumnSelectionAllowed(false);
-        tblPermissao.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        tblPermissao.addMouseListener(new java.awt.event.MouseAdapter() {
+        tblEquipamento.setColumnSelectionAllowed(false);
+        tblEquipamento.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tblEquipamento.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tblPermissaoMouseClicked(evt);
+                tblEquipamentoMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(tblPermissao);
-        if (tblPermissao.getColumnModel().getColumnCount() > 0) {
-            tblPermissao.getColumnModel().getColumn(0).setMaxWidth(50);
+        jScrollPane1.setViewportView(tblEquipamento);
+        if (tblEquipamento.getColumnModel().getColumnCount() > 0) {
+            tblEquipamento.getColumnModel().getColumn(0).setMaxWidth(50);
         }
 
         btnInserir.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -298,26 +357,27 @@ public class frmPermissao extends javax.swing.JFrame {
             panInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panInferiorLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jScrollPane1)
-                    .addGroup(panInferiorLayout.createSequentialGroup()
-                        .addComponent(btnInserir, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnApagar, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnLimpar, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 689, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panInferiorLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnInserir, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnApagar, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnLimpar, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         panInferiorLayout.setVerticalGroup(
             panInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panInferiorLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(panInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnInserir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnEditar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -330,8 +390,11 @@ public class frmPermissao extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panInferior, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(panSuperior, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panSuperior, javax.swing.GroupLayout.PREFERRED_SIZE, 700, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panInferior, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -342,8 +405,6 @@ public class frmPermissao extends javax.swing.JFrame {
                 .addComponent(panInferior, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        getAccessibleContext().setAccessibleName("EstoqControl - Permissões");
 
         pack();
         setLocationRelativeTo(null);
@@ -360,7 +421,7 @@ public class frmPermissao extends javax.swing.JFrame {
     private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
         preencherTabela();
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(modelo);
-        tblPermissao.setRowSorter(sorter);
+        tblEquipamento.setRowSorter(sorter);
         
         // Adiciona filtro dinâmico de busca conforme digitação no campo txtBusca
         txtBusca.getDocument().addDocumentListener(new DocumentListener() {
@@ -396,9 +457,19 @@ public class frmPermissao extends javax.swing.JFrame {
      */
     private void btnInserirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInserirActionPerformed
         float numero = 0;
-        if (txtPermissao.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Informe a permissão.");
-            txtPermissao.requestFocus();
+        if (txtEquipamento.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Informe o equipamento.");
+            txtEquipamento.requestFocus();
+            return;
+        }
+        if (txtNserie.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Informe o número de série.");
+            txtNserie.requestFocus();
+            return;
+        }
+        if (cmbIdfabricante.getSelectedItem().toString().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Informe o fabricante");
+            cmbIdfabricante.requestFocus();
             return;
         }
         
@@ -416,16 +487,28 @@ public class frmPermissao extends javax.swing.JFrame {
         }
         */
         
+        for (Fabricante p : fabricantes) {
+            if (p.getFabricante().equalsIgnoreCase(cmbIdfabricante.getSelectedItem().toString())) {
+                idFabricante = p.getId();
+                break; // achou, pode parar
+            }
+        }
+        
+        
         try {       
-            Permissao permissao = new Permissao();
-            permissao.setPermissao(txtPermissao.getText());
-            permissao.setData(new Date());
+            Equipamento equipamento = new Equipamento();
+            equipamento.setEquipamento(txtEquipamento.getText());
+            equipamento.setNumero_serie(txtNserie.getText());
+            equipamento.setId_fabricante(idFabricante);
+            equipamento.setData(new Date());
                  
-            int linha = permissaoDAO.inserir(permissao);
+            int linha = equipamentoDAO.inserir(equipamento);
             if (linha > 0) {
                 JOptionPane.showMessageDialog(this, "Usuário inserido com sucesso!");
-                txtPermissao.setText("");
-                txtPermissao.requestFocus();
+                txtEquipamento.setText("");
+                txtNserie.setText("");
+                cmbIdfabricante.setSelectedIndex(0);
+                txtEquipamento.requestFocus();
                 preencherTabela(); 
             } 
         } catch (Exception ex) {    
@@ -445,27 +528,26 @@ public class frmPermissao extends javax.swing.JFrame {
      * Evento acionado ao clicar em uma linha da tabela.
      * Pode ser usado para capturar o ID do usuário selecionado.
      */
-    private void tblPermissaoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPermissaoMouseClicked
-        /*int linha = tblUsuario.getSelectedRow();
+    private void tblEquipamentoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblEquipamentoMouseClicked
+        /*int linha = tblEquipamento.getSelectedRow();
         if(linha != -1) {
-            String id = tblUsuario.getValueAt(linha,0).toString();
+            String id = tblEquipamento.getValueAt(linha,0).toString();
             //System.out.println(""+id);
         }*/
         
-        linhaSelecionada = tblPermissao.getSelectedRow();
+        linhaSelecionada = tblEquipamento.getSelectedRow();
         if (linhaSelecionada != -1) {
             // Suponha que o ID esteja na primeira coluna (índice 0)
-            Object idObj = tblPermissao.getValueAt(linhaSelecionada, 0);
+            Object idObj = tblEquipamento.getValueAt(linhaSelecionada, 0);
             if (idObj != null) {
-                idPermissao = Integer.parseInt(idObj.toString());
+                idEquipamento = Integer.parseInt(idObj.toString());
             }
         }
         
-        /*Object idObj = tblPermissao.getValueAt(linhaSelecionada, 0);
-        idPermissao = Integer.parseInt(idObj.toString());*/
-        
-        carregarPermissao(idPermissao);
-    }//GEN-LAST:event_tblPermissaoMouseClicked
+        Object idObj = tblEquipamento.getValueAt(linhaSelecionada, 0);
+        idEquipamento = Integer.parseInt(idObj.toString());
+        carregarEquipamento(idEquipamento);
+    }//GEN-LAST:event_tblEquipamentoMouseClicked
 
     /**
      * Abre a tela de edição de um usuário selecionado na tabela.
@@ -473,13 +555,13 @@ public class frmPermissao extends javax.swing.JFrame {
      */
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
         try {
-            linhaSelecionada = tblPermissao.getSelectedRow();
-       
+            linhaSelecionada = tblEquipamento.getSelectedRow();
+            System.out.println(""+linhaSelecionada);
             if (linhaSelecionada != -1) {
                 // Suponha que o ID esteja na primeira coluna (índice 0)
-                Object idObj = tblPermissao.getValueAt(linhaSelecionada, 0);
+                Object idObj = tblEquipamento.getValueAt(linhaSelecionada, 0);
                 if (idObj != null) {
-                    idPermissao = Integer.parseInt(idObj.toString());
+                    idEquipamento = Integer.parseInt(idObj.toString());
                 }
             } else {
                 JOptionPane.showMessageDialog(this, "Para Editar selecione a linha desejada!");
@@ -491,12 +573,20 @@ public class frmPermissao extends javax.swing.JFrame {
         }
         
         float numero = 0;
-        if (txtPermissao.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Informe o nome.");
+        if (txtEquipamento.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Informe o equipamento.");
+            return;
+        }
+        if (txtNserie.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Informe o número de série.");
+            return;
+        }
+        if (cmbIdfabricante.getSelectedItem().toString().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Informe o fabricante");
             return;
         }
         
-        if (txtPermissao.getText().equals(tPermissao)){
+        if (txtEquipamento.getText().equals(tEquipamento) && txtNserie.getText().equals(tNumeroserie) && cmbIdfabricante.getSelectedItem().toString().equals(tIdfabricante)){
             JOptionPane.showMessageDialog(this, "Não houve alteração nos dados acima!");
             
            /* try {
@@ -507,21 +597,32 @@ public class frmPermissao extends javax.swing.JFrame {
     
             return;
         }
+        
+        for (Fabricante p : fabricantes) {
+            if (p.getFabricante().equalsIgnoreCase(cmbIdfabricante.getSelectedItem().toString())) {
+                idFabricante = p.getId();
+                break; // achou, pode parar
+            }
+        }
 
         try {
-            // Cria o objeto Usuario com os dados dos campos
-            Permissao permissao = new Permissao();
-            permissao.setId(idPermissao);
-            permissao.setPermissao(txtPermissao.getText());
-            
+            // Cria o objeto Equipamento com os dados dos campos
+            Equipamento equipamento = new Equipamento();
+            equipamento.setId(idEquipamento);
+            equipamento.setEquipamento(txtEquipamento.getText());
+            equipamento.setNumero_serie(txtNserie.getText());
+            equipamento.setId_fabricante(idFabricante);
+
             // Chama a função editar
-            PermissaoDAO permissaoDAO = DAOFactory.criarPermissaoDAO();
-            int resultado = permissaoDAO.editar(permissao);
+            EquipamentoDAO equipamentoDAO = DAOFactory.criarEquipamentoDAO();
+            int resultado = equipamentoDAO.editar(equipamento);
 
             if (resultado > 0) {
                 JOptionPane.showMessageDialog(null, "Usuário atualizado com sucesso.");
-                txtPermissao.setText("");
-                txtPermissao.requestFocus();
+                txtEquipamento.setText("");
+                txtNserie.setText("");
+                cmbIdfabricante.setSelectedIndex(0);
+                txtEquipamento.requestFocus();
             } else {
                 JOptionPane.showMessageDialog(null, "Falha ao atualizar o usuário.");
             }
@@ -534,9 +635,9 @@ public class frmPermissao extends javax.swing.JFrame {
 
     private void restaurarSelecaoTabela(int linha) {
         //preencherTabela();
-        if (linha >= 0 && linha < tblPermissao.getRowCount()) {
-            tblPermissao.setRowSelectionInterval(linha, linha);
-            tblPermissao.scrollRectToVisible(tblPermissao.getCellRect(linha, 0, true));
+        if (linha >= 0 && linha < tblEquipamento.getRowCount()) {
+            tblEquipamento.setRowSelectionInterval(linha, linha);
+            tblEquipamento.scrollRectToVisible(tblEquipamento.getCellRect(linha, 0, true));
         }
     }
     /**
@@ -545,31 +646,32 @@ public class frmPermissao extends javax.swing.JFrame {
      */
     private void btnApagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApagarActionPerformed
         try{
-            linhaSelecionada = tblPermissao.getSelectedRow();
+            linhaSelecionada = tblEquipamento.getSelectedRow();
             if (linhaSelecionada != -1) {
                 // Suponha que o ID esteja na primeira coluna (índice 0)
-                Object idObj = tblPermissao.getValueAt(linhaSelecionada, 0);
+                Object idObj = tblEquipamento.getValueAt(linhaSelecionada, 0);
                 if (idObj != null) {
-                    idPermissao = Integer.parseInt(idObj.toString());
+                    int idEquipamento = Integer.parseInt(idObj.toString());
                 }
             }
         
-            Object idObj = tblPermissao.getValueAt(linhaSelecionada, 0);
-            int idUsuario = Integer.parseInt(idObj.toString());
+            Object idObj = tblEquipamento.getValueAt(linhaSelecionada, 0);
+            int idEquipamento = Integer.parseInt(idObj.toString());
             
             Object[] opcao = {"Não", "Sim"};
             int opcaoSelecionada = JOptionPane.showOptionDialog(this, "Deseja apagar este registro?", "Aviso",
             JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opcao, opcao[0]);
             if (opcaoSelecionada == 1) {
                 try {
-                PermissaoDAO dao = DAOFactory.criarPermissaoDAO();
-                    int resultado = dao.apagar(idUsuario);
+                EquipamentoDAO dao = DAOFactory.criarEquipamentoDAO();
+                    int resultado = dao.apagar(idEquipamento);
 
                     if (resultado > 0) {
                         JOptionPane.showMessageDialog(null, "Usuário excluído com sucesso.");
                         preencherTabela(); // Atualiza a tabela após exclusão
-                        txtPermissao.setText("");
-                        txtPermissao.requestFocus();
+                        txtEquipamento.setText("");
+                        txtNserie.setText("");
+                        txtEquipamento.requestFocus();
                     } else {
                         JOptionPane.showMessageDialog(null, "Não foi possível excluir o usuário.");
                     }
@@ -588,29 +690,53 @@ public class frmPermissao extends javax.swing.JFrame {
     }//GEN-LAST:event_btnApagarActionPerformed
 
     private void btnLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparActionPerformed
-        txtPermissao.setText("");
-        txtPermissao.requestFocus();
+        txtEquipamento.setText("");
+        txtNserie.setText("");
+        cmbIdfabricante.setSelectedIndex(0);
+        txtEquipamento.requestFocus();
     }//GEN-LAST:event_btnLimparActionPerformed
 
-    private void txtPermissaoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPermissaoKeyPressed
-        
-    }//GEN-LAST:event_txtPermissaoKeyPressed
+    private void txtEquipamentoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtEquipamentoKeyPressed
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER)
+            txtNserie.requestFocus();
+    }//GEN-LAST:event_txtEquipamentoKeyPressed
+
+    private void txtNserieKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNserieKeyPressed
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER)
+            cmbIdfabricante.requestFocus();        // TODO add your handling code here:
+    }//GEN-LAST:event_txtNserieKeyPressed
 
     private void btnEditarFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_btnEditarFocusGained
-        if (!txtPermissao.getText().isEmpty())
+        if (!txtEquipamento.getText().isEmpty())
             restaurarSelecaoTabela(linhaSelecionada);
     }//GEN-LAST:event_btnEditarFocusGained
 
-    private void carregarPermissao(int id) {
-        PermissaoDAO permissaoDAO = DAOFactory.criarPermissaoDAO();
-        Permissao permissao = permissaoDAO.listar(id); // chama a função que você forneceu
+    private void cmbIdfabricanteKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbIdfabricanteKeyPressed
+       
+    }//GEN-LAST:event_cmbIdfabricanteKeyPressed
+
+    private void carregarEquipamento(int id) {
+        EquipamentoDAO equipamentoDAO = DAOFactory.criarEquipamentoDAO();
+        Equipamento equipamento = equipamentoDAO.listar(id); // chama a função que você forneceu
         
-        if (permissao != null) {
-            txtPermissao.setText(permissao.getPermissao());
-            
-            tPermissao = txtPermissao.getText();
+        for (Fabricante p : fabricantes) {
+            if (p.getFabricante().equalsIgnoreCase(cmbIdfabricante.getSelectedItem().toString())) {
+                idFabricante = p.getId();
+                break; // achou, pode parar
+            }
+        }
+        
+        if (equipamento != null) {
+            txtEquipamento.setText(equipamento.getEquipamento());
+            txtNserie.setText(equipamento.getNumero_serie());
+            Object obIndex = tblEquipamento.getValueAt(linhaSelecionada, 3);
+            int cmbIndex = Integer.parseInt(obIndex.toString())-1 ;
+            cmbIdfabricante.setSelectedIndex(cmbIndex);
+            tEquipamento = txtEquipamento.getText();
+            tNumeroserie = txtNserie.getText();
+            tIdfabricante = idFabricante;
         } else {
-            JOptionPane.showMessageDialog(this, "Permissão não encontrada.");
+            JOptionPane.showMessageDialog(this, "Usuário não encontrado.");
         }
     }
     
@@ -631,13 +757,13 @@ public class frmPermissao extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(frmPermissao.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmEquipamento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(frmPermissao.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmEquipamento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(frmPermissao.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmEquipamento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(frmPermissao.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmEquipamento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>
@@ -645,7 +771,7 @@ public class frmPermissao extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new frmPermissao().setVisible(true);
+                new frmEquipamento().setVisible(true);
             }
         });
     }
@@ -656,14 +782,18 @@ public class frmPermissao extends javax.swing.JFrame {
     private javax.swing.JButton btnInserir;
     private javax.swing.JButton btnLimpar;
     private javax.swing.JButton btnVoltar;
+    private javax.swing.JComboBox<String> cmbIdfabricante;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JLabel lblPermissao;
+    private javax.swing.JLabel lblEquipamento;
+    private javax.swing.JLabel lblIdfabricante;
+    private javax.swing.JLabel lblNserie;
     private javax.swing.JLabel lblPesquisa;
     private javax.swing.JLabel lblTitulo;
     private javax.swing.JPanel panInferior;
     private javax.swing.JPanel panSuperior;
-    private javax.swing.JTable tblPermissao;
+    private javax.swing.JTable tblEquipamento;
     private javax.swing.JTextField txtBusca;
-    private javax.swing.JTextField txtPermissao;
+    private javax.swing.JTextField txtEquipamento;
+    private javax.swing.JTextField txtNserie;
     // End of variables declaration//GEN-END:variables
 }

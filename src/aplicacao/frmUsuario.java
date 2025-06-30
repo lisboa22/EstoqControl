@@ -581,7 +581,7 @@ public class frmUsuario extends javax.swing.JFrame {
                 txtUsuario.setText("");
                 txtEmail.setText("");
                 ftxtCelular.setText("");
-                //cmbPermissao.setText("");
+                cmbPermissao.setSelectedIndex(0);
                 ptxtSenha.setText("");
                 txtNome.requestFocus();
                 preencherTabela(); 
@@ -713,7 +713,7 @@ public class frmUsuario extends javax.swing.JFrame {
                 txtUsuario.setText("");
                 txtEmail.setText("");
                 ftxtCelular.setText("");
-                //txtFuncao.setText("");
+                cmbPermissao.setSelectedIndex(0);
                 ptxtSenha.setText("");
                 txtNome.requestFocus();
             } else {
@@ -762,6 +762,12 @@ public class frmUsuario extends javax.swing.JFrame {
                     if (resultado > 0) {
                         JOptionPane.showMessageDialog(null, "Usuário excluído com sucesso.");
                         preencherTabela(); // Atualiza a tabela após exclusão
+                        txtNome.setText("");
+                        txtUsuario.setText("");
+                        txtEmail.setText("");
+                        ftxtCelular.setText("");
+                        ptxtSenha.setText("");
+                        txtNome.requestFocus();
                     } else {
                         JOptionPane.showMessageDialog(null, "Não foi possível excluir o usuário.");
                     }
@@ -784,7 +790,7 @@ public class frmUsuario extends javax.swing.JFrame {
         txtUsuario.setText("");
         txtEmail.setText("");
         ftxtCelular.setText("");
-        //txtFuncao.setText("");
+        cmbPermissao.setSelectedIndex(0);
         ptxtSenha.setText("");
         txtNome.requestFocus();
     }//GEN-LAST:event_btnLimparActionPerformed
@@ -825,6 +831,8 @@ public class frmUsuario extends javax.swing.JFrame {
         for (Permissao p : permissoes) {
             if (p.getPermissao().equalsIgnoreCase(cmbPermissao.getSelectedItem().toString())) {
                 idPermissao = p.getId();
+                //Permissao = p.getPermissao();
+               
                 break; // achou, pode parar
             }
         }
@@ -834,7 +842,9 @@ public class frmUsuario extends javax.swing.JFrame {
             txtUsuario.setText(usuario.getUsuario());
             txtEmail.setText(usuario.getEmail());
             ftxtCelular.setText(usuario.getCelular());
-            //cmbPermissao.setText(usuario.getFuncao());
+            Object obIndex = tblUsuario.getValueAt(linhaSelecionada, 5);
+            int cmbIndex = Integer.parseInt(obIndex.toString())-1 ;
+            cmbPermissao.setSelectedIndex(cmbIndex);
             ptxtSenha.setText(usuario.getSenha());
             
             tNome = txtNome.getText();

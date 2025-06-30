@@ -17,8 +17,12 @@ public class DAOFactory {
         return (PermissaoDAO) new PermissaoDAOJDBC();
     }
     
-     public static FabricanteDAO criarFabricanteDAO() {
+    public static FabricanteDAO criarFabricanteDAO() {
         return (FabricanteDAO) new FabricanteDAOJDBC();
+    }
+     
+    public static EquipamentoDAO criarEquipamentoDAO() {
+        return (EquipamentoDAO) new EquipamentoDAOJDBC();
     }
     /*
     public static FormaPagamentoDAO criarFormaPagamentoDAO() {

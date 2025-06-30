@@ -51,21 +51,21 @@ public class frmFabricante extends javax.swing.JFrame {
                 return false; // Bloqueia edição em todas as células
             }
         };
-        tblFAbricante.setModel(modelo);
-        tblFAbricante.setColumnSelectionAllowed(false);
-        tblFAbricante.isCellEditable(linhaSelecionada, 0);
+        tblFabricante.setModel(modelo);
+        tblFabricante.setColumnSelectionAllowed(false);
+        tblFabricante.isCellEditable(linhaSelecionada, 0);
 
         try {
-            tblFAbricante.getColumnModel().getColumn(2).setCellRenderer(new CustomRenderer());
+            tblFabricante.getColumnModel().getColumn(2).setCellRenderer(new CustomRenderer());
         } catch (Exception ex) {
             System.out.println("Erro ao configurar renderizador.");
         }
         
         //Configura renderização personalizada para coluna de valores monetários
         try {
-            modelo = (DefaultTableModel) tblFAbricante.getModel();
+            modelo = (DefaultTableModel) tblFabricante.getModel();
             // Configura renderização personalizada para coluna de valores monetários
-            tblFAbricante.getColumnModel().getColumn(2).setCellRenderer(new CustomRenderer());
+            tblFabricante.getColumnModel().getColumn(2).setCellRenderer(new CustomRenderer());
         } catch (Exception ex) {
             System.out.println("erro");
         } 
@@ -116,7 +116,7 @@ public class frmFabricante extends javax.swing.JFrame {
         txtBusca = new javax.swing.JTextField();
         panInferior = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblFAbricante = new javax.swing.JTable();
+        tblFabricante = new javax.swing.JTable();
         btnInserir = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
         btnApagar = new javax.swing.JButton();
@@ -196,7 +196,7 @@ public class frmFabricante extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        tblFAbricante.setModel(new javax.swing.table.DefaultTableModel(
+        tblFabricante.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},
                 {null, null, null},
@@ -215,15 +215,15 @@ public class frmFabricante extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
-        tblFAbricante.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        tblFAbricante.addMouseListener(new java.awt.event.MouseAdapter() {
+        tblFabricante.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tblFabricante.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tblFAbricanteMouseClicked(evt);
+                tblFabricanteMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(tblFAbricante);
-        if (tblFAbricante.getColumnModel().getColumnCount() > 0) {
-            tblFAbricante.getColumnModel().getColumn(0).setMaxWidth(50);
+        jScrollPane1.setViewportView(tblFabricante);
+        if (tblFabricante.getColumnModel().getColumnCount() > 0) {
+            tblFabricante.getColumnModel().getColumn(0).setMaxWidth(50);
         }
 
         btnInserir.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -353,7 +353,7 @@ public class frmFabricante extends javax.swing.JFrame {
     private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
         preencherTabela();
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(modelo);
-        tblFAbricante.setRowSorter(sorter);
+        tblFabricante.setRowSorter(sorter);
         
         // Adiciona filtro dinâmico de busca conforme digitação no campo txtBusca
         txtBusca.getDocument().addDocumentListener(new DocumentListener() {
@@ -438,26 +438,26 @@ public class frmFabricante extends javax.swing.JFrame {
      * Evento acionado ao clicar em uma linha da tabela.
      * Pode ser usado para capturar o ID do usuário selecionado.
      */
-    private void tblFAbricanteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblFAbricanteMouseClicked
+    private void tblFabricanteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblFabricanteMouseClicked
         /*int linha = tblUsuario.getSelectedRow();
         if(linha != -1) {
             String id = tblUsuario.getValueAt(linha,0).toString();
             //System.out.println(""+id);
         }*/
         
-        linhaSelecionada = tblFAbricante.getSelectedRow();
+        linhaSelecionada = tblFabricante.getSelectedRow();
         if (linhaSelecionada != -1) {
             // Suponha que o ID esteja na primeira coluna (índice 0)
-            Object idObj = tblFAbricante.getValueAt(linhaSelecionada, 0);
+            Object idObj = tblFabricante.getValueAt(linhaSelecionada, 0);
             if (idObj != null) {
                 idFabricante = Integer.parseInt(idObj.toString());
             }
         }
         
-        Object idObj = tblFAbricante.getValueAt(linhaSelecionada, 0);
+        Object idObj = tblFabricante.getValueAt(linhaSelecionada, 0);
         idFabricante = Integer.parseInt(idObj.toString());
         carregarFabricante(idFabricante);
-    }//GEN-LAST:event_tblFAbricanteMouseClicked
+    }//GEN-LAST:event_tblFabricanteMouseClicked
 
     /**
      * Abre a tela de edição de um usuário selecionado na tabela.
@@ -465,11 +465,11 @@ public class frmFabricante extends javax.swing.JFrame {
      */
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
         try {
-            linhaSelecionada = tblFAbricante.getSelectedRow();
+            linhaSelecionada = tblFabricante.getSelectedRow();
        
             if (linhaSelecionada != -1) {
                 // Suponha que o ID esteja na primeira coluna (índice 0)
-                Object idObj = tblFAbricante.getValueAt(linhaSelecionada, 0);
+                Object idObj = tblFabricante.getValueAt(linhaSelecionada, 0);
                 if (idObj != null) {
                     idFabricante = Integer.parseInt(idObj.toString());
                 }
@@ -526,9 +526,9 @@ public class frmFabricante extends javax.swing.JFrame {
 
     private void restaurarSelecaoTabela(int linha) {
         //preencherTabela();
-        if (linha >= 0 && linha < tblFAbricante.getRowCount()) {
-            tblFAbricante.setRowSelectionInterval(linha, linha);
-            tblFAbricante.scrollRectToVisible(tblFAbricante.getCellRect(linha, 0, true));
+        if (linha >= 0 && linha < tblFabricante.getRowCount()) {
+            tblFabricante.setRowSelectionInterval(linha, linha);
+            tblFabricante.scrollRectToVisible(tblFabricante.getCellRect(linha, 0, true));
         }
     }
     /**
@@ -537,10 +537,10 @@ public class frmFabricante extends javax.swing.JFrame {
      */
     private void btnApagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApagarActionPerformed
         try{
-            linhaSelecionada = tblFAbricante.getSelectedRow();
+            linhaSelecionada = tblFabricante.getSelectedRow();
             if (linhaSelecionada != -1) {
                 // Suponha que o ID esteja na primeira coluna (índice 0)
-                Object idObj = tblFAbricante.getValueAt(linhaSelecionada, 0);
+                Object idObj = tblFabricante.getValueAt(linhaSelecionada, 0);
                 if (idObj != null) {
                     idFabricante = Integer.parseInt(idObj.toString());
                 }
@@ -560,6 +560,8 @@ public class frmFabricante extends javax.swing.JFrame {
                     if (resultado > 0) {
                         JOptionPane.showMessageDialog(null, "Usuário excluído com sucesso.");
                         preencherTabela(); // Atualiza a tabela após exclusão
+                        txtFabricante.setText("");
+                        txtFabricante.requestFocus();
                     } else {
                         JOptionPane.showMessageDialog(null, "Não foi possível excluir o usuário.");
                     }
@@ -666,7 +668,7 @@ public class frmFabricante extends javax.swing.JFrame {
     private javax.swing.JLabel lblTitulo;
     private javax.swing.JPanel panInferior;
     private javax.swing.JPanel panSuperior;
-    private javax.swing.JTable tblFAbricante;
+    private javax.swing.JTable tblFabricante;
     private javax.swing.JTextField txtBusca;
     private javax.swing.JTextField txtFabricante;
     // End of variables declaration//GEN-END:variables
