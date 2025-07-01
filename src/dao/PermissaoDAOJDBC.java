@@ -33,9 +33,9 @@ public class PermissaoDAOJDBC implements PermissaoDAO {
             linha = DAOGenerico.executarComando(insert, permissao.getPermissao(),
                                                         permissao.getData());
         } catch (SQLIntegrityConstraintViolationException ex) {
-            JOptionPane.showMessageDialog(null, "Não é possível inserir: o email já está vinculado a outro Usuário.");      
+            JOptionPane.showMessageDialog(null, "Não é possível inserir: Permissão já cadastrada.");      
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "bNão é possível inserir: o email já está vinculado a outro Usuário.");      
+            JOptionPane.showMessageDialog(null, "Não é possível inserir: Permissão já cadastrada.");      
         } catch (Exception e) {
             //e.printStackTrace();
         }

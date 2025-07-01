@@ -8,26 +8,19 @@ import dao.DAOFactory;
 import dao.FabricanteDAO;
 import dao.EquipamentoDAO;
 import modelo.Equipamento;
-import java.awt.event.KeyEvent;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import javax.swing.JOptionPane;
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import javax.swing.JComboBox;
 import javax.swing.table.TableRowSorter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.RowFilter;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.*;
 import modelo.Fabricante;
-
-
-
-
-
 /**
  *
  * @author robson
@@ -39,9 +32,9 @@ public class frmEquipamento extends javax.swing.JFrame {
     private int idEquipamento;
     private int linhaSelecionada;
     private String tEquipamento;
-    private String tNumeroserie;
     private int tIdfabricante;
     private int idFabricante;
+    private String bFabricante;
 
      
     FabricanteDAO fabricanteDAO = DAOFactory.criarFabricanteDAO();
@@ -57,10 +50,14 @@ public class frmEquipamento extends javax.swing.JFrame {
     public frmEquipamento() {
         initComponents();
         
+        // Aplica o filtro de maiúsculas ao JTextField      
+        ((AbstractDocument) txtEquipamento.getDocument()).setDocumentFilter(new UppercaseDocumentFilter());
+        ((AbstractDocument) txtBusca.getDocument()).setDocumentFilter(new UppercaseDocumentFilter());
+        
         // Define um modelo de tabela que não permite edição de células
         modelo = new DefaultTableModel(
             new Object[][]{},
-            new String[]{"ID", "EQUIPAMENTO", "NÚMERO SÉRIE", "ID FABRICANTE", "DATA"}
+            new String[]{"ID", "EQUIPAMENTO", "ID FABRICANTE", "DATA"}
         ) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -117,7 +114,6 @@ public class frmEquipamento extends javax.swing.JFrame {
             
                 modelo.addRow(new Object[]{equipamento.getId(),
                                            equipamento.getEquipamento(),
-                                           equipamento.getNumero_serie(),
                                            equipamento.getId_fabricante(),
                                            dataFormatada});
             }
@@ -141,8 +137,6 @@ public class frmEquipamento extends javax.swing.JFrame {
         panSuperior = new javax.swing.JPanel();
         txtEquipamento = new javax.swing.JTextField();
         lblEquipamento = new javax.swing.JLabel();
-        txtNserie = new javax.swing.JTextField();
-        lblNserie = new javax.swing.JLabel();
         lblIdfabricante = new javax.swing.JLabel();
         lblTitulo = new javax.swing.JLabel();
         lblPesquisa = new javax.swing.JLabel();
@@ -184,15 +178,7 @@ public class frmEquipamento extends javax.swing.JFrame {
         lblEquipamento.setBackground(new java.awt.Color(51, 51, 51));
         lblEquipamento.setText("EQUIPAMENTO*");
 
-        txtNserie.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                txtNserieKeyPressed(evt);
-            }
-        });
-
-        lblNserie.setText("NUMERO SÉRIE*");
-
-        lblIdfabricante.setText("FUNÇÃO*");
+        lblIdfabricante.setText("FABRICANTE*");
 
         lblTitulo.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         lblTitulo.setText("EQUIPAMENTOS");
@@ -218,16 +204,12 @@ public class frmEquipamento extends javax.swing.JFrame {
                     .addGroup(panSuperiorLayout.createSequentialGroup()
                         .addGroup(panSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblEquipamento, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtEquipamento, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblNserie, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtNserie, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(txtEquipamento, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(panSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                             .addComponent(lblIdfabricante, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cmbIdfabricante, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(773, 773, 773))
+                            .addComponent(cmbIdfabricante, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(780, 780, 780))
                     .addGroup(panSuperiorLayout.createSequentialGroup()
                         .addComponent(lblPesquisa, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -249,36 +231,33 @@ public class frmEquipamento extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblEquipamento)
-                    .addComponent(lblNserie)
                     .addComponent(lblIdfabricante))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtEquipamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtNserie, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cmbIdfabricante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
         tblEquipamento.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "ID", "EQUIPAMENTO", "NUMERO SERIE", "ID FABRICANTE", "DATA"
+                "ID", "EQUIPAMENTO", "ID FABRICANTE", "DATA"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Object.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.Object.class
             };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
         });
-        tblEquipamento.setColumnSelectionAllowed(false);
         tblEquipamento.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tblEquipamento.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -462,11 +441,7 @@ public class frmEquipamento extends javax.swing.JFrame {
             txtEquipamento.requestFocus();
             return;
         }
-        if (txtNserie.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Informe o número de série.");
-            txtNserie.requestFocus();
-            return;
-        }
+
         if (cmbIdfabricante.getSelectedItem().toString().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Informe o fabricante");
             cmbIdfabricante.requestFocus();
@@ -498,17 +473,13 @@ public class frmEquipamento extends javax.swing.JFrame {
         try {       
             Equipamento equipamento = new Equipamento();
             equipamento.setEquipamento(txtEquipamento.getText());
-            equipamento.setNumero_serie(txtNserie.getText());
             equipamento.setId_fabricante(idFabricante);
             equipamento.setData(new Date());
                  
             int linha = equipamentoDAO.inserir(equipamento);
             if (linha > 0) {
                 JOptionPane.showMessageDialog(this, "Usuário inserido com sucesso!");
-                txtEquipamento.setText("");
-                txtNserie.setText("");
-                cmbIdfabricante.setSelectedIndex(0);
-                txtEquipamento.requestFocus();
+                limparCampos();
                 preencherTabela(); 
             } 
         } catch (Exception ex) {    
@@ -577,18 +548,14 @@ public class frmEquipamento extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Informe o equipamento.");
             return;
         }
-        if (txtNserie.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Informe o número de série.");
-            return;
-        }
         if (cmbIdfabricante.getSelectedItem().toString().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Informe o fabricante");
             return;
         }
         
-        if (txtEquipamento.getText().equals(tEquipamento) && txtNserie.getText().equals(tNumeroserie) && cmbIdfabricante.getSelectedItem().toString().equals(tIdfabricante)){
+        if (txtEquipamento.getText().equals(tEquipamento) && cmbIdfabricante.getSelectedItem().toString().equalsIgnoreCase(bFabricante)){
             JOptionPane.showMessageDialog(this, "Não houve alteração nos dados acima!");
-            
+        
            /* try {
                 Thread.sleep(2000); // pausa de 2 segundos
             } catch (InterruptedException e) {
@@ -610,7 +577,6 @@ public class frmEquipamento extends javax.swing.JFrame {
             Equipamento equipamento = new Equipamento();
             equipamento.setId(idEquipamento);
             equipamento.setEquipamento(txtEquipamento.getText());
-            equipamento.setNumero_serie(txtNserie.getText());
             equipamento.setId_fabricante(idFabricante);
 
             // Chama a função editar
@@ -619,10 +585,7 @@ public class frmEquipamento extends javax.swing.JFrame {
 
             if (resultado > 0) {
                 JOptionPane.showMessageDialog(null, "Usuário atualizado com sucesso.");
-                txtEquipamento.setText("");
-                txtNserie.setText("");
-                cmbIdfabricante.setSelectedIndex(0);
-                txtEquipamento.requestFocus();
+                limparCampos();
             } else {
                 JOptionPane.showMessageDialog(null, "Falha ao atualizar o usuário.");
             }
@@ -669,9 +632,7 @@ public class frmEquipamento extends javax.swing.JFrame {
                     if (resultado > 0) {
                         JOptionPane.showMessageDialog(null, "Usuário excluído com sucesso.");
                         preencherTabela(); // Atualiza a tabela após exclusão
-                        txtEquipamento.setText("");
-                        txtNserie.setText("");
-                        txtEquipamento.requestFocus();
+                        limparCampos();
                     } else {
                         JOptionPane.showMessageDialog(null, "Não foi possível excluir o usuário.");
                     }
@@ -690,21 +651,12 @@ public class frmEquipamento extends javax.swing.JFrame {
     }//GEN-LAST:event_btnApagarActionPerformed
 
     private void btnLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparActionPerformed
-        txtEquipamento.setText("");
-        txtNserie.setText("");
-        cmbIdfabricante.setSelectedIndex(0);
-        txtEquipamento.requestFocus();
+        limparCampos();
     }//GEN-LAST:event_btnLimparActionPerformed
 
     private void txtEquipamentoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtEquipamentoKeyPressed
-        if(evt.getKeyCode() == KeyEvent.VK_ENTER)
-            txtNserie.requestFocus();
+        
     }//GEN-LAST:event_txtEquipamentoKeyPressed
-
-    private void txtNserieKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNserieKeyPressed
-        if(evt.getKeyCode() == KeyEvent.VK_ENTER)
-            cmbIdfabricante.requestFocus();        // TODO add your handling code here:
-    }//GEN-LAST:event_txtNserieKeyPressed
 
     private void btnEditarFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_btnEditarFocusGained
         if (!txtEquipamento.getText().isEmpty())
@@ -715,26 +667,46 @@ public class frmEquipamento extends javax.swing.JFrame {
        
     }//GEN-LAST:event_cmbIdfabricanteKeyPressed
 
+    private void limparCampos(){
+        txtEquipamento.setText("");
+        cmbIdfabricante.setSelectedIndex(0);
+        txtEquipamento.requestFocus();
+        
+    }
+    
     private void carregarEquipamento(int id) {
         EquipamentoDAO equipamentoDAO = DAOFactory.criarEquipamentoDAO();
         Equipamento equipamento = equipamentoDAO.listar(id); // chama a função que você forneceu
-        
-        for (Fabricante p : fabricantes) {
-            if (p.getFabricante().equalsIgnoreCase(cmbIdfabricante.getSelectedItem().toString())) {
-                idFabricante = p.getId();
-                break; // achou, pode parar
-            }
-        }
-        
+         
         if (equipamento != null) {
+            
+            //Capiturar o Id da Permissão salvo na tabela.
+            Object obIndex = tblEquipamento.getValueAt(linhaSelecionada, 2);
+
+            //Transforma o valor do objeto obIndex no int cmbIndex e busca no banco Persmissoeso id igual a cmbIndex e salva a descricao em bPermissao.
+            for (Fabricante f : fabricantes) {
+                int cmbIndex = Integer.parseInt(obIndex.toString());
+                if (f.getId() == cmbIndex) {
+                    //idPermissao = p.getId();
+                    bFabricante = f.getFabricante();
+                    break; // achou, pode parar
+                }
+            }
+
+            //Busca dentro do combobox item igual ao conteudo da variável bPermissao e altera o index do combobox.
+            for (int i = 0; i < cmbIdfabricante.getItemCount(); i++) {
+                Object item = cmbIdfabricante.getItemAt(i);
+
+                if (item.toString().equalsIgnoreCase(bFabricante)) {
+                    cmbIdfabricante.setSelectedIndex(i);
+                    break;
+                }
+            }    
+            
             txtEquipamento.setText(equipamento.getEquipamento());
-            txtNserie.setText(equipamento.getNumero_serie());
-            Object obIndex = tblEquipamento.getValueAt(linhaSelecionada, 3);
-            int cmbIndex = Integer.parseInt(obIndex.toString())-1 ;
-            cmbIdfabricante.setSelectedIndex(cmbIndex);
+            
             tEquipamento = txtEquipamento.getText();
-            tNumeroserie = txtNserie.getText();
-            tIdfabricante = idFabricante;
+           // tIdfabricante = idFabricante;
         } else {
             JOptionPane.showMessageDialog(this, "Usuário não encontrado.");
         }
@@ -786,7 +758,6 @@ public class frmEquipamento extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblEquipamento;
     private javax.swing.JLabel lblIdfabricante;
-    private javax.swing.JLabel lblNserie;
     private javax.swing.JLabel lblPesquisa;
     private javax.swing.JLabel lblTitulo;
     private javax.swing.JPanel panInferior;
@@ -794,6 +765,5 @@ public class frmEquipamento extends javax.swing.JFrame {
     private javax.swing.JTable tblEquipamento;
     private javax.swing.JTextField txtBusca;
     private javax.swing.JTextField txtEquipamento;
-    private javax.swing.JTextField txtNserie;
     // End of variables declaration//GEN-END:variables
 }

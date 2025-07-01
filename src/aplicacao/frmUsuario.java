@@ -13,19 +13,15 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import javax.swing.JOptionPane;
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import javax.swing.JComboBox;
 import javax.swing.table.TableRowSorter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.RowFilter;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.AbstractDocument;
 import modelo.Permissao;
-
-
-
 
 
 /**
@@ -45,13 +41,13 @@ public class frmUsuario extends javax.swing.JFrame {
     private int tidPermissao;
     private String tSenha;
     private int idPermissao;
+    private String bPermissao;
 
      
     PermissaoDAO permissaoDAO = DAOFactory.criarPermissaoDAO();
     
     // Pegue a lista de permissões
-        List<Permissao> permissoes = permissaoDAO.listar();
-        
+    List<Permissao> permissoes = permissaoDAO.listar();    
     
     /*
      * Construtor da classe frmUsuario.
@@ -60,10 +56,17 @@ public class frmUsuario extends javax.swing.JFrame {
     public frmUsuario() {
         initComponents();
         
+        // Aplica o filtro de maiúsculas ao JTextField      
+        ((AbstractDocument) txtNome.getDocument()).setDocumentFilter(new UppercaseDocumentFilter());
+        ((AbstractDocument) txtUsuario.getDocument()).setDocumentFilter(new UppercaseDocumentFilter());
+        ((AbstractDocument) txtEmail.getDocument()).setDocumentFilter(new UppercaseDocumentFilter());
+        ((AbstractDocument) txtBusca.getDocument()).setDocumentFilter(new UppercaseDocumentFilter());
+        
+        
         // Define um modelo de tabela que não permite edição de células
         modelo = new DefaultTableModel(
             new Object[][]{},
-            new String[]{"ID", "Nome", "Usuário", "Email", "Celular", "Permissão", "Data"}
+            new String[]{"ID*", "NOME*", "USUÁRIO*", "EMAIL*", "CELULAR*", "PERMISSÃO*", "DATA*"}
         ) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -212,7 +215,7 @@ public class frmUsuario extends javax.swing.JFrame {
 
         lblEmail.setText("EMAIL*");
 
-        lblFuncao.setText("FUNÇÃO*");
+        lblFuncao.setText("PERMISSÃO*");
 
         lblCelular.setText("CELULAR*");
 
@@ -322,7 +325,7 @@ public class frmUsuario extends javax.swing.JFrame {
                 {null, null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "NOME", "USUÁRIO", "EMAIL", "CELULAR", "FUNCAO", "DATA"
+                "ID", "NOME", "USUÁRIO", "EMAIL", "CELULAR", "PERMISSÃO", "DATA"
             }
         ) {
             Class[] types = new Class [] {
@@ -333,7 +336,7 @@ public class frmUsuario extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
-        tblUsuario.setCellSelectionEnabled(true);
+        tblUsuario.setColumnSelectionAllowed(false);
         tblUsuario.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tblUsuario.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -511,7 +514,9 @@ public class frmUsuario extends javax.swing.JFrame {
      * Oculta a janela atual.
      */
     private void btnInserirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInserirActionPerformed
-        float numero = 0;
+       // float numero = 0;
+        
+        //Verifica se há campo vazio.
         if (txtNome.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Informe o nome.");
             txtNome.requestFocus();
@@ -540,8 +545,8 @@ public class frmUsuario extends javax.swing.JFrame {
         if (ptxtSenha.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Informe a senha");
             ptxtSenha.requestFocus();
-            return;
         }
+        
         /*
         if (txtValor.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Informe o Valor do Frete");
@@ -556,12 +561,12 @@ public class frmUsuario extends javax.swing.JFrame {
         }
         */
         
-        for (Permissao p : permissoes) {
+        /*for (Permissao p : permissoes) {
             if (p.getPermissao().equalsIgnoreCase(cmbPermissao.getSelectedItem().toString())) {
                 idPermissao = p.getId();
                 break; // achou, pode parar
             }
-        }
+        }*/
         
         
         try {       
@@ -577,13 +582,7 @@ public class frmUsuario extends javax.swing.JFrame {
             int linha = usuarioDAO.inserir(usuario);
             if (linha > 0) {
                 JOptionPane.showMessageDialog(this, "Usuário inserido com sucesso!");
-                txtNome.setText("");
-                txtUsuario.setText("");
-                txtEmail.setText("");
-                ftxtCelular.setText("");
-                cmbPermissao.setSelectedIndex(0);
-                ptxtSenha.setText("");
-                txtNome.requestFocus();
+                limparCampos();
                 preencherTabela(); 
             } 
         } catch (Exception ex) {    
@@ -631,7 +630,7 @@ public class frmUsuario extends javax.swing.JFrame {
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
         try {
             linhaSelecionada = tblUsuario.getSelectedRow();
-            System.out.println(""+linhaSelecionada);
+            
             if (linhaSelecionada != -1) {
                 // Suponha que o ID esteja na primeira coluna (índice 0)
                 Object idObj = tblUsuario.getValueAt(linhaSelecionada, 0);
@@ -647,33 +646,40 @@ public class frmUsuario extends javax.swing.JFrame {
             return;
         }
         
-        float numero = 0;
+       // float numero = 0;
+        
+        //Verifica se há campo vazio.
         if (txtNome.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Informe o nome.");
+            txtNome.requestFocus();
             return;
         }
         if (txtUsuario.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Informe o usuario.");
+            txtUsuario.requestFocus();
             return;
         }
         if (txtEmail.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Informe o email");
+            txtEmail.requestFocus();
             return;
         }
         if (ftxtCelular.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Informe o celular");
+            ftxtCelular.requestFocus();
             return;
         }
         if (cmbPermissao.getSelectedItem().toString().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Informe a função");
+            JOptionPane.showMessageDialog(this, "Informe a permissão");
+            cmbPermissao.requestFocus();
             return;
         }
         if (ptxtSenha.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Informe a senha");
-            return;
+            ptxtSenha.requestFocus();
         }
         
-        if (txtNome.getText().equals(tNome) && txtUsuario.getText().equals(tUsuario) && txtEmail.getText().equals(tEmail) && ftxtCelular.getText().equals(tCelular) && cmbPermissao.getSelectedItem().toString().equals(tidPermissao) && ptxtSenha.getText().equals(tSenha)){
+        if (txtNome.getText().equals(tNome) && txtUsuario.getText().equals(tUsuario) && txtEmail.getText().equals(tEmail) && ftxtCelular.getText().equals(tCelular) && cmbPermissao.getSelectedItem().toString().equalsIgnoreCase(bPermissao) && ptxtSenha.getText().equals(tSenha)){
             JOptionPane.showMessageDialog(this, "Não houve alteração nos dados acima!");
             
            /* try {
@@ -702,20 +708,13 @@ public class frmUsuario extends javax.swing.JFrame {
             usuario.setCelular(ftxtCelular.getText());
             usuario.setidPermissao(idPermissao);
             usuario.setSenha(ptxtSenha.getText()); // Se houver campo senha
-
             // Chama a função editar
             UsuarioDAO usuarioDAO = DAOFactory.criarUsuarioDAO();
             int resultado = usuarioDAO.editar(usuario);
 
             if (resultado > 0) {
                 JOptionPane.showMessageDialog(null, "Usuário atualizado com sucesso.");
-                txtNome.setText("");
-                txtUsuario.setText("");
-                txtEmail.setText("");
-                ftxtCelular.setText("");
-                cmbPermissao.setSelectedIndex(0);
-                ptxtSenha.setText("");
-                txtNome.requestFocus();
+                limparCampos();
             } else {
                 JOptionPane.showMessageDialog(null, "Falha ao atualizar o usuário.");
             }
@@ -762,12 +761,7 @@ public class frmUsuario extends javax.swing.JFrame {
                     if (resultado > 0) {
                         JOptionPane.showMessageDialog(null, "Usuário excluído com sucesso.");
                         preencherTabela(); // Atualiza a tabela após exclusão
-                        txtNome.setText("");
-                        txtUsuario.setText("");
-                        txtEmail.setText("");
-                        ftxtCelular.setText("");
-                        ptxtSenha.setText("");
-                        txtNome.requestFocus();
+                        limparCampos();
                     } else {
                         JOptionPane.showMessageDialog(null, "Não foi possível excluir o usuário.");
                     }
@@ -786,13 +780,7 @@ public class frmUsuario extends javax.swing.JFrame {
     }//GEN-LAST:event_btnApagarActionPerformed
 
     private void btnLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparActionPerformed
-        txtNome.setText("");
-        txtUsuario.setText("");
-        txtEmail.setText("");
-        ftxtCelular.setText("");
-        cmbPermissao.setSelectedIndex(0);
-        ptxtSenha.setText("");
-        txtNome.requestFocus();
+        limparCampos();
     }//GEN-LAST:event_btnLimparActionPerformed
 
     private void txtNomeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNomeKeyPressed
@@ -823,28 +811,52 @@ public class frmUsuario extends javax.swing.JFrame {
     private void cmbPermissaoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbPermissaoKeyPressed
         ptxtSenha.requestFocus();
     }//GEN-LAST:event_cmbPermissaoKeyPressed
-
+   
+    //Limpa os campos da tabela e reseta combobox.
+    private void limparCampos(){
+        txtNome.setText("");
+        txtUsuario.setText("");
+        txtEmail.setText("");
+        ftxtCelular.setText("");
+        cmbPermissao.setSelectedIndex(0);
+        ptxtSenha.setText("");
+        txtNome.requestFocus();
+    }
+    
     private void carregarUsuario(int id) {
         UsuarioDAO usuarioDAO = DAOFactory.criarUsuarioDAO();
         Usuario usuario = usuarioDAO.listar(id); // chama a função que você forneceu
         
-        for (Permissao p : permissoes) {
-            if (p.getPermissao().equalsIgnoreCase(cmbPermissao.getSelectedItem().toString())) {
-                idPermissao = p.getId();
-                //Permissao = p.getPermissao();
-               
-                break; // achou, pode parar
+       if (usuario != null) {
+           
+           //Capiturar o Id da Permissão salvo na tabela.
+            Object obIndex = tblUsuario.getValueAt(linhaSelecionada, 5);
+
+            //Transforma o valor do objeto obIndex no int cmbIndex e busca no banco Persmissoeso id igual a cmbIndex e salva a descricao em bPermissao.
+            for (Permissao p : permissoes) {
+                int cmbIndex = Integer.parseInt(obIndex.toString());
+                if (p.getId() == cmbIndex) {
+                    //idPermissao = p.getId();
+                    bPermissao = p.getPermissao();
+                    break; // achou, pode parar
+                }
             }
-        }
-        
-        if (usuario != null) {
+
+            //Busca dentro do combobox item igual ao conteudo da variável bPermissao e altera o index do combobox.
+            for (int i = 0; i < cmbPermissao.getItemCount(); i++) {
+                Object item = cmbPermissao.getItemAt(i);
+
+                if (item.toString().equalsIgnoreCase(bPermissao)) {
+                    cmbPermissao.setSelectedIndex(i);
+                    break;
+                }
+            }    
+            
+            //Carrega o conteúdo da linha selecionada nos campos.
             txtNome.setText(usuario.getNome());
             txtUsuario.setText(usuario.getUsuario());
             txtEmail.setText(usuario.getEmail());
             ftxtCelular.setText(usuario.getCelular());
-            Object obIndex = tblUsuario.getValueAt(linhaSelecionada, 5);
-            int cmbIndex = Integer.parseInt(obIndex.toString())-1 ;
-            cmbPermissao.setSelectedIndex(cmbIndex);
             ptxtSenha.setText(usuario.getSenha());
             
             tNome = txtNome.getText();

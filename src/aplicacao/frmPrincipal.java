@@ -54,8 +54,8 @@ public class frmPrincipal extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnEquipamento = new javax.swing.JButton();
+        btnUnidade = new javax.swing.JButton();
         btnUsuario = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         btnPermissao = new javax.swing.JButton();
@@ -63,12 +63,12 @@ public class frmPrincipal extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
-        jMenuItem6 = new javax.swing.JMenuItem();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem7 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
-        jMenuItem3 = new javax.swing.JMenuItem();
-        jMenuItem4 = new javax.swing.JMenuItem();
+        menPermissao = new javax.swing.JMenuItem();
+        menUsuario = new javax.swing.JMenuItem();
+        menFabricante = new javax.swing.JMenuItem();
+        menEquipamento = new javax.swing.JMenuItem();
+        menUnidade = new javax.swing.JMenuItem();
+        menMovimentacao = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         jMenuItem5 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
@@ -86,22 +86,27 @@ public class frmPrincipal extends javax.swing.JFrame {
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "CADASTROS", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Segoe UI", 1, 12))); // NOI18N
         jPanel1.setToolTipText("Cadastros");
 
-        jButton1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jButton1.setIcon(new javax.swing.ImageIcon("C:\\Users\\robson.SRVLISBOAINFO\\Desktop\\ProjPOO\\EstoqControl\\src\\recurso\\gerador-eletrico.png")); // NOI18N
-        jButton1.setText("Equipamentos");
-        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnEquipamento.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnEquipamento.setIcon(new javax.swing.ImageIcon("C:\\Users\\robson.SRVLISBOAINFO\\Desktop\\ProjPOO\\EstoqControl\\src\\recurso\\gerador-eletrico.png")); // NOI18N
+        btnEquipamento.setText("Equipamentos");
+        btnEquipamento.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnEquipamento.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnEquipamento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnEquipamentoActionPerformed(evt);
             }
         });
 
-        jButton2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jButton2.setIcon(new javax.swing.ImageIcon("C:\\Users\\robson.SRVLISBOAINFO\\Desktop\\ProjPOO\\EstoqControl\\src\\recurso\\casa-limpa.png")); // NOI18N
-        jButton2.setText("Unidades");
-        jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnUnidade.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnUnidade.setIcon(new javax.swing.ImageIcon("C:\\Users\\robson.SRVLISBOAINFO\\Desktop\\ProjPOO\\EstoqControl\\src\\recurso\\casa-limpa.png")); // NOI18N
+        btnUnidade.setText("Unidades");
+        btnUnidade.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnUnidade.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnUnidade.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUnidadeActionPerformed(evt);
+            }
+        });
 
         btnUsuario.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnUsuario.setIcon(new javax.swing.ImageIcon("C:\\Users\\robson.SRVLISBOAINFO\\Desktop\\ProjPOO\\EstoqControl\\src\\recurso\\adicionar-usuario-botao.png")); // NOI18N
@@ -153,13 +158,13 @@ public class frmPrincipal extends javax.swing.JFrame {
                     .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnUnidade, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(btnUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(btnMarca, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnEquipamento, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(15, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -169,12 +174,12 @@ public class frmPrincipal extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(btnPermissao, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnEquipamento, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnMarca, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnUnidade, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(30, Short.MAX_VALUE))
         );
 
@@ -185,55 +190,60 @@ public class frmPrincipal extends javax.swing.JFrame {
 
         jMenu1.setText("Cadastro");
 
-        jMenuItem6.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        jMenuItem6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recurso/chaveiro (1).png"))); // NOI18N
-        jMenuItem6.setText("Permissões");
-        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+        menPermissao.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        menPermissao.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recurso/chaveiro (1).png"))); // NOI18N
+        menPermissao.setText("Permissões");
+        menPermissao.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem6ActionPerformed(evt);
+                menPermissaoActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem6);
+        jMenu1.add(menPermissao);
 
-        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        jMenuItem1.setIcon(new javax.swing.ImageIcon("C:\\Users\\robson.SRVLISBOAINFO\\Desktop\\ProjPOO\\EstoqControl\\src\\recurso\\adicionar-usuario-menu.png")); // NOI18N
-        jMenuItem1.setText("Usuários");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        menUsuario.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        menUsuario.setIcon(new javax.swing.ImageIcon("C:\\Users\\robson.SRVLISBOAINFO\\Desktop\\ProjPOO\\EstoqControl\\src\\recurso\\adicionar-usuario-menu.png")); // NOI18N
+        menUsuario.setText("Usuários");
+        menUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                menUsuarioActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem1);
+        jMenu1.add(menUsuario);
 
-        jMenuItem7.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        jMenuItem7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recurso/fabrica (1).png"))); // NOI18N
-        jMenuItem7.setText("Fabricante");
-        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
+        menFabricante.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        menFabricante.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recurso/fabrica (1).png"))); // NOI18N
+        menFabricante.setText("Fabricante");
+        menFabricante.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem7ActionPerformed(evt);
+                menFabricanteActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem7);
+        jMenu1.add(menFabricante);
 
-        jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        jMenuItem2.setIcon(new javax.swing.ImageIcon("C:\\Users\\robson.SRVLISBOAINFO\\Desktop\\ProjPOO\\EstoqControl\\src\\recurso\\gerador-eletrico-menu.png")); // NOI18N
-        jMenuItem2.setText("Equipamentos");
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+        menEquipamento.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        menEquipamento.setIcon(new javax.swing.ImageIcon("C:\\Users\\robson.SRVLISBOAINFO\\Desktop\\ProjPOO\\EstoqControl\\src\\recurso\\gerador-eletrico-menu.png")); // NOI18N
+        menEquipamento.setText("Equipamentos");
+        menEquipamento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem2ActionPerformed(evt);
+                menEquipamentoActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem2);
+        jMenu1.add(menEquipamento);
 
-        jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        jMenuItem3.setIcon(new javax.swing.ImageIcon("C:\\Users\\robson.SRVLISBOAINFO\\Desktop\\ProjPOO\\EstoqControl\\src\\recurso\\casa-limpa-menu.png")); // NOI18N
-        jMenuItem3.setText("Unidades");
-        jMenu1.add(jMenuItem3);
+        menUnidade.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        menUnidade.setIcon(new javax.swing.ImageIcon("C:\\Users\\robson.SRVLISBOAINFO\\Desktop\\ProjPOO\\EstoqControl\\src\\recurso\\casa-limpa-menu.png")); // NOI18N
+        menUnidade.setText("Unidades");
+        menUnidade.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menUnidadeActionPerformed(evt);
+            }
+        });
+        jMenu1.add(menUnidade);
 
-        jMenuItem4.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_M, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        jMenuItem4.setIcon(new javax.swing.ImageIcon("C:\\Users\\robson.SRVLISBOAINFO\\Desktop\\ProjPOO\\EstoqControl\\src\\recurso\\movimentacao-de-carga-menu.png")); // NOI18N
-        jMenuItem4.setText("Movimentação");
-        jMenu1.add(jMenuItem4);
+        menMovimentacao.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_M, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        menMovimentacao.setIcon(new javax.swing.ImageIcon("C:\\Users\\robson.SRVLISBOAINFO\\Desktop\\ProjPOO\\EstoqControl\\src\\recurso\\movimentacao-de-carga-menu.png")); // NOI18N
+        menMovimentacao.setText("Movimentação");
+        jMenu1.add(menMovimentacao);
         jMenu1.add(jSeparator1);
 
         jMenuItem5.setText("Sair");
@@ -288,14 +298,13 @@ public class frmPrincipal extends javax.swing.JFrame {
         new frmUsuario().setVisible(true); 
     }//GEN-LAST:event_btnUsuarioActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void menUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menUsuarioActionPerformed
         new frmUsuario().setVisible(true);
-        frmPrincipal.this.setVisible(false);
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_menUsuarioActionPerformed
 
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem2ActionPerformed
+    private void menEquipamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menEquipamentoActionPerformed
+        new frmEquipamento().setVisible(true);
+    }//GEN-LAST:event_menEquipamentoActionPerformed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
         System.exit(0);        // TODO add your handling code here:
@@ -313,17 +322,25 @@ public class frmPrincipal extends javax.swing.JFrame {
         new frmFabricante().setVisible(true);
     }//GEN-LAST:event_btnMarcaActionPerformed
 
-    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
+    private void menFabricanteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menFabricanteActionPerformed
         new frmFabricante().setVisible(true);
-    }//GEN-LAST:event_jMenuItem7ActionPerformed
+    }//GEN-LAST:event_menFabricanteActionPerformed
 
-    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+    private void menPermissaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menPermissaoActionPerformed
         new frmPermissao().setVisible(true);        
-    }//GEN-LAST:event_jMenuItem6ActionPerformed
+    }//GEN-LAST:event_menPermissaoActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnEquipamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEquipamentoActionPerformed
         new frmEquipamento().setVisible(true);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnEquipamentoActionPerformed
+
+    private void btnUnidadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUnidadeActionPerformed
+        new frmUnidade().setVisible(true); 
+    }//GEN-LAST:event_btnUnidadeActionPerformed
+
+    private void menUnidadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menUnidadeActionPerformed
+        new frmUnidade().setVisible(true);
+    }//GEN-LAST:event_menUnidadeActionPerformed
 
     /**
      * @param args the command line arguments
@@ -364,11 +381,11 @@ public class frmPrincipal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnEquipamento;
     private javax.swing.JButton btnMarca;
     private javax.swing.JButton btnPermissao;
+    private javax.swing.JButton btnUnidade;
     private javax.swing.JButton btnUsuario;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
@@ -376,14 +393,14 @@ public class frmPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
-    private javax.swing.JMenuItem jMenuItem6;
-    private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JMenuItem menEquipamento;
+    private javax.swing.JMenuItem menFabricante;
+    private javax.swing.JMenuItem menMovimentacao;
+    private javax.swing.JMenuItem menPermissao;
+    private javax.swing.JMenuItem menUnidade;
+    private javax.swing.JMenuItem menUsuario;
     // End of variables declaration//GEN-END:variables
 }

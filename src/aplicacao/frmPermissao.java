@@ -6,20 +6,17 @@ package aplicacao;
 
 import dao.DAOFactory;
 import dao.PermissaoDAO;
-import java.awt.event.KeyEvent;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import javax.swing.JOptionPane;
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import javax.swing.JComboBox;
 import javax.swing.table.TableRowSorter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.RowFilter;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.*;
 import modelo.Permissao;
 
 
@@ -45,10 +42,13 @@ public class frmPermissao extends javax.swing.JFrame {
     public frmPermissao() {
         initComponents();
         
+        ((AbstractDocument) txtPermissao.getDocument()).setDocumentFilter(new UppercaseDocumentFilter());
+        ((AbstractDocument) txtBusca.getDocument()).setDocumentFilter(new UppercaseDocumentFilter());
+        
         // Define um modelo de tabela que não permite edição de células
         modelo = new DefaultTableModel(
             new Object[][]{},
-            new String[]{"ID", "Permissão", "Data"}
+            new String[]{"ID", "PERMISSÃO", "DATA"}
         ) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -424,8 +424,7 @@ public class frmPermissao extends javax.swing.JFrame {
             int linha = permissaoDAO.inserir(permissao);
             if (linha > 0) {
                 JOptionPane.showMessageDialog(this, "Usuário inserido com sucesso!");
-                txtPermissao.setText("");
-                txtPermissao.requestFocus();
+                limparCampos();
                 preencherTabela(); 
             } 
         } catch (Exception ex) {    
@@ -520,8 +519,7 @@ public class frmPermissao extends javax.swing.JFrame {
 
             if (resultado > 0) {
                 JOptionPane.showMessageDialog(null, "Usuário atualizado com sucesso.");
-                txtPermissao.setText("");
-                txtPermissao.requestFocus();
+                limparCampos();
             } else {
                 JOptionPane.showMessageDialog(null, "Falha ao atualizar o usuário.");
             }
@@ -568,8 +566,7 @@ public class frmPermissao extends javax.swing.JFrame {
                     if (resultado > 0) {
                         JOptionPane.showMessageDialog(null, "Usuário excluído com sucesso.");
                         preencherTabela(); // Atualiza a tabela após exclusão
-                        txtPermissao.setText("");
-                        txtPermissao.requestFocus();
+                        limparCampos();
                     } else {
                         JOptionPane.showMessageDialog(null, "Não foi possível excluir o usuário.");
                     }
@@ -588,8 +585,7 @@ public class frmPermissao extends javax.swing.JFrame {
     }//GEN-LAST:event_btnApagarActionPerformed
 
     private void btnLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparActionPerformed
-        txtPermissao.setText("");
-        txtPermissao.requestFocus();
+        limparCampos();
     }//GEN-LAST:event_btnLimparActionPerformed
 
     private void txtPermissaoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPermissaoKeyPressed
@@ -601,6 +597,11 @@ public class frmPermissao extends javax.swing.JFrame {
             restaurarSelecaoTabela(linhaSelecionada);
     }//GEN-LAST:event_btnEditarFocusGained
 
+    private void limparCampos(){
+        txtPermissao.setText("");
+        txtPermissao.requestFocus();
+    }
+    
     private void carregarPermissao(int id) {
         PermissaoDAO permissaoDAO = DAOFactory.criarPermissaoDAO();
         Permissao permissao = permissaoDAO.listar(id); // chama a função que você forneceu

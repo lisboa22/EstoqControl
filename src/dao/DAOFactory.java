@@ -24,6 +24,10 @@ public class DAOFactory {
     public static EquipamentoDAO criarEquipamentoDAO() {
         return (EquipamentoDAO) new EquipamentoDAOJDBC();
     }
+    
+    public static UnidadeDAO criarUnidadeDAO() {
+        return (UnidadeDAO) new UnidadeDAOJDBC();
+    }
     /*
     public static FormaPagamentoDAO criarFormaPagamentoDAO() {
         return (FormaPagamentoDAO) new FormaPagamentoDAOJDBC();

@@ -185,7 +185,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="lblFuncao">
           <Properties>
-            <Property name="text" type="java.lang.String" value="FUN&#xc7;&#xc3;O*"/>
+            <Property name="text" type="java.lang.String" value="PERMISS&#xc3;O*"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblCelular">
@@ -305,11 +305,10 @@
                     <Column editable="true" title="USU&#xc1;RIO" type="java.lang.String"/>
                     <Column editable="true" title="EMAIL" type="java.lang.String"/>
                     <Column editable="true" title="CELULAR" type="java.lang.String"/>
-                    <Column editable="true" title="FUNCAO" type="java.lang.String"/>
+                    <Column editable="true" title="PERMISS&#xc3;O" type="java.lang.String"/>
                     <Column editable="true" title="DATA" type="java.lang.Object"/>
                   </Table>
                 </Property>
-                <Property name="cellSelectionEnabled" type="boolean" value="true"/>
                 <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
                   <TableColumnModel selectionModel="0">
                     <Column maxWidth="50" minWidth="-1" prefWidth="-1" resizable="true">

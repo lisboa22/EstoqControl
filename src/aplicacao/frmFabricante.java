@@ -10,10 +10,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import javax.swing.JOptionPane;
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import javax.swing.JComboBox;
 import javax.swing.table.TableRowSorter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.RowFilter;
@@ -21,6 +18,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import modelo.Fabricante;
 import dao.FabricanteDAO;
+import javax.swing.text.*;
 
 /**
  *
@@ -40,6 +38,10 @@ public class frmFabricante extends javax.swing.JFrame {
      */
     public frmFabricante() {
         initComponents();
+        
+        // Aplica o filtro de maiúsculas ao JTextField      
+        ((AbstractDocument) txtFabricante.getDocument()).setDocumentFilter(new UppercaseDocumentFilter());
+        ((AbstractDocument) txtBusca.getDocument()).setDocumentFilter(new UppercaseDocumentFilter());
         
         // Define um modelo de tabela que não permite edição de células
         modelo = new DefaultTableModel(
@@ -417,8 +419,7 @@ public class frmFabricante extends javax.swing.JFrame {
             int linha = fabricanteDAO.inserir(fabricante);
             if (linha > 0) {
                 JOptionPane.showMessageDialog(this, "Usuário inserido com sucesso!");
-                txtFabricante.setText("");
-                txtFabricante.requestFocus();
+                limparCampos();
                 preencherTabela(); 
             } 
         } catch (Exception ex) {    
@@ -512,8 +513,7 @@ public class frmFabricante extends javax.swing.JFrame {
 
             if (resultado > 0) {
                 JOptionPane.showMessageDialog(null, "Usuário atualizado com sucesso.");
-                txtFabricante.setText("");
-                txtFabricante.requestFocus();
+                limparCampos();
             } else {
                 JOptionPane.showMessageDialog(null, "Falha ao atualizar o usuário.");
             }
@@ -560,8 +560,7 @@ public class frmFabricante extends javax.swing.JFrame {
                     if (resultado > 0) {
                         JOptionPane.showMessageDialog(null, "Usuário excluído com sucesso.");
                         preencherTabela(); // Atualiza a tabela após exclusão
-                        txtFabricante.setText("");
-                        txtFabricante.requestFocus();
+                        limparCampos();
                     } else {
                         JOptionPane.showMessageDialog(null, "Não foi possível excluir o usuário.");
                     }
@@ -580,8 +579,7 @@ public class frmFabricante extends javax.swing.JFrame {
     }//GEN-LAST:event_btnApagarActionPerformed
 
     private void btnLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparActionPerformed
-        txtFabricante.setText("");
-        txtFabricante.requestFocus();
+        limparCampos();
     }//GEN-LAST:event_btnLimparActionPerformed
 
     private void txtFabricanteKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFabricanteKeyPressed
@@ -593,6 +591,11 @@ public class frmFabricante extends javax.swing.JFrame {
             restaurarSelecaoTabela(linhaSelecionada);
     }//GEN-LAST:event_btnEditarFocusGained
 
+    private void limparCampos(){
+        txtFabricante.setText("");
+        txtFabricante.requestFocus();
+    }
+    
     private void carregarFabricante(int id) {
         FabricanteDAO fabricanteDAO = DAOFactory.criarFabricanteDAO();
         Fabricante fabricante = fabricanteDAO.listar(id); // chama a função que você forneceu

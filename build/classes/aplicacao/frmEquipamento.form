@@ -31,7 +31,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="panSuperior" min="-2" pref="700" max="-2" attributes="0"/>
+                  <Component id="panSuperior" min="-2" max="-2" attributes="0"/>
                   <Component id="panInferior" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -68,33 +68,27 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="lblEquipamento" alignment="0" min="-2" pref="114" max="-2" attributes="0"/>
-                              <Component id="txtEquipamento" alignment="0" min="-2" pref="114" max="-2" attributes="0"/>
+                              <Component id="lblEquipamento" min="-2" pref="114" max="-2" attributes="0"/>
+                              <Component id="txtEquipamento" min="-2" pref="215" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="lblNserie" alignment="0" min="-2" pref="108" max="-2" attributes="0"/>
-                              <Component id="txtNserie" alignment="0" min="-2" pref="108" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="2" attributes="0">
                               <Component id="lblIdfabricante" alignment="2" min="-2" pref="111" max="-2" attributes="0"/>
-                              <Component id="cmbIdfabricante" alignment="1" max="32767" attributes="0"/>
+                              <Component id="cmbIdfabricante" alignment="1" min="-2" pref="123" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="-2" pref="773" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" attributes="0">
                           <Component id="lblPesquisa" min="-2" pref="129" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="txtBusca" min="-2" pref="234" max="-2" attributes="0"/>
-                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="277" max="-2" attributes="0"/>
                   <Component id="lblTitulo" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="277" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -110,13 +104,11 @@
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="lblEquipamento" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblNserie" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="lblIdfabricante" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="txtEquipamento" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtNserie" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="cmbIdfabricante" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
@@ -138,19 +130,9 @@
             <Property name="text" type="java.lang.String" value="EQUIPAMENTO*"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="txtNserie">
-          <Events>
-            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtNserieKeyPressed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblNserie">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="NUMERO S&#xc9;RIE*"/>
-          </Properties>
-        </Component>
         <Component class="javax.swing.JLabel" name="lblIdfabricante">
           <Properties>
-            <Property name="text" type="java.lang.String" value="FUN&#xc7;&#xc3;O*"/>
+            <Property name="text" type="java.lang.String" value="FABRICANTE*"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblTitulo">
@@ -242,10 +224,9 @@
             <Component class="javax.swing.JTable" name="tblEquipamento">
               <Properties>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                  <Table columnCount="5" rowCount="4">
+                  <Table columnCount="4" rowCount="4">
                     <Column editable="true" title="ID" type="java.lang.Integer"/>
                     <Column editable="true" title="EQUIPAMENTO" type="java.lang.String"/>
-                    <Column editable="true" title="NUMERO SERIE" type="java.lang.String"/>
                     <Column editable="true" title="ID FABRICANTE" type="java.lang.Integer"/>
                     <Column editable="true" title="DATA" type="java.lang.Object"/>
                   </Table>
@@ -272,14 +253,8 @@
                       <Editor/>
                       <Renderer/>
                     </Column>
-                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                      <Title/>
-                      <Editor/>
-                      <Renderer/>
-                    </Column>
                   </TableColumnModel>
                 </Property>
-                <Property name="columnSelectionAllowed" type="boolean" value="false"/>
                 <Property name="selectionMode" type="int" value="0"/>
                 <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
                   <TableHeader reorderingAllowed="true" resizingAllowed="true"/>

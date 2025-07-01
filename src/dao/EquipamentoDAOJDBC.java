@@ -24,13 +24,12 @@ public class EquipamentoDAOJDBC implements EquipamentoDAO{
     public int inserir(Equipamento equipamento) throws ClassNotFoundException, SQLException, SQLIntegrityConstraintViolationException {
         StringBuilder sqlBuilder = new StringBuilder();
         sqlBuilder
-                .append("insert into equipamentos(equipamento, numero_serie, id_fabricante, data) ")
-                .append("VALUES (?, ?, ?, ?)");
+                .append("insert into equipamentos(equipamento, id_fabricante, data) ")
+                .append("VALUES (?, ?, ?)");
         String insert = sqlBuilder.toString();
         int linha = 0;
         try {  
             linha = DAOGenerico.executarComando(insert, equipamento.getEquipamento(),
-                                                        equipamento.getNumero_serie(),
                                                         equipamento.getId_fabricante(),
                                                         equipamento.getData()
                                                         );
@@ -59,7 +58,6 @@ public class EquipamentoDAOJDBC implements EquipamentoDAO{
                 Equipamento equipamento = new Equipamento();
                 equipamento.setId(rset.getInt("id"));
                 equipamento.setEquipamento(rset.getString("equipamento"));
-                equipamento.setNumero_serie(rset.getString("numero_serie"));
                 equipamento.setId_fabricante(rset.getInt("id_fabricante"));
                 equipamento.setData(rset.getDate("data"));
                 equipamentos.add(equipamento);
@@ -83,7 +81,6 @@ public class EquipamentoDAOJDBC implements EquipamentoDAO{
                 
                 equipamento.setId(rset.getInt("id"));
                 equipamento.setEquipamento(rset.getString("equipamento"));
-                equipamento.setNumero_serie(rset.getString("numero_serie"));
                 equipamento.setId_fabricante(rset.getInt("id_fabricante"));
                 equipamento.setData(rset.getDate("data"));
             }
@@ -100,14 +97,12 @@ public class EquipamentoDAOJDBC implements EquipamentoDAO{
         sqlBuilder
                 .append("UPDATE equipamentos SET ")
                 .append("equipamento = ?, ")
-                .append("numero_serie = ?, ")
                 .append("id_fabricante = ? ")
                 .append("WHERE id = ?");
         String update = sqlBuilder.toString();
         int linha = 0;
         try {
             linha = DAOGenerico.executarComando(update, equipamento.getEquipamento(),
-                                                        equipamento.getNumero_serie(),
                                                         equipamento.getId_fabricante(),
                                                         equipamento.getId());
         } catch (Exception e) { 

@@ -13,7 +13,6 @@ import java.util.Date;
 public class Equipamento {
     private int id;
     private String equipamento;
-    private String numero_serie;
     private int id_fabricante;
     private Date data;
 
@@ -31,14 +30,6 @@ public class Equipamento {
 
     public void setEquipamento(String equipamento) {
         this.equipamento = equipamento;
-    }
-
-    public String getNumero_serie() {
-        return numero_serie;
-    }
-
-    public void setNumero_serie(String numero_serie) {
-        this.numero_serie = numero_serie;
     }
 
     public int getId_fabricante() {
@@ -59,7 +50,7 @@ public class Equipamento {
 
     @Override
     public String toString() {
-        return "Equipamento{" + "id=" + id + ", equipamento=" + equipamento + ", numero_serie=" + numero_serie + ", id_fabricante=" + id_fabricante + ", data=" + data + '}';
+        return "Equipamento{" + "id=" + id + ", equipamento=" + equipamento + ", id_fabricante=" + id_fabricante + ", data=" + data + '}';
     }
 
     
