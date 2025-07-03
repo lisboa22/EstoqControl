@@ -241,6 +241,7 @@
               <Image iconType="2" name="C:\Users\robson.SRVLISBOAINFO\Desktop\ProjPOO\EstoqControl\src\recurso\gerador-eletrico.png"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Equipamentos"/>
+            <Property name="enabled" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
           </Properties>
@@ -257,6 +258,7 @@
               <Image iconType="2" name="C:\Users\robson.SRVLISBOAINFO\Desktop\ProjPOO\EstoqControl\src\recurso\casa-limpa.png"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Unidades"/>
+            <Property name="enabled" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
           </Properties>
@@ -273,6 +275,7 @@
               <Image iconType="2" name="C:\Users\robson.SRVLISBOAINFO\Desktop\ProjPOO\EstoqControl\src\recurso\adicionar-usuario-botao.png"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Usu&#xe1;rios"/>
+            <Property name="enabled" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
           </Properties>
@@ -289,6 +292,7 @@
               <Image iconType="2" name="C:\Users\robson.SRVLISBOAINFO\Desktop\ProjPOO\EstoqControl\src\recurso\movimentacao-de-carga.png"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Movimenta&#xe7;&#xe3;o"/>
+            <Property name="enabled" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
           </Properties>
@@ -302,6 +306,7 @@
               <Image iconType="3" name="/recurso/chaveiro.png"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Permiss&#xf5;es"/>
+            <Property name="enabled" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
           </Properties>
@@ -318,6 +323,7 @@
               <Image iconType="3" name="/recurso/fabrica.png"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Fabricante"/>
+            <Property name="enabled" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
           </Properties>

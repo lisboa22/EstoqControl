@@ -42,6 +42,7 @@ public class frmUsuario extends javax.swing.JFrame {
     private String tSenha;
     private int idPermissao;
     private String bPermissao;
+    
 
      
     PermissaoDAO permissaoDAO = DAOFactory.criarPermissaoDAO();
@@ -54,8 +55,9 @@ public class frmUsuario extends javax.swing.JFrame {
      * Inicializa os componentes da interface e configura a tabela de usuários.
      */
     public frmUsuario() {
-        initComponents();
         
+        initComponents();
+         
         // Aplica o filtro de maiúsculas ao JTextField      
         ((AbstractDocument) txtNome.getDocument()).setDocumentFilter(new UppercaseDocumentFilter());
         ((AbstractDocument) txtUsuario.getDocument()).setDocumentFilter(new UppercaseDocumentFilter());
@@ -240,6 +242,12 @@ public class frmUsuario extends javax.swing.JFrame {
             }
         });
 
+        ptxtSenha.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ptxtSenhaMouseClicked(evt);
+            }
+        });
+
         cmbPermissao.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 cmbPermissaoKeyPressed(evt);
@@ -336,7 +344,6 @@ public class frmUsuario extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
-        tblUsuario.setColumnSelectionAllowed(false);
         tblUsuario.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tblUsuario.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -561,12 +568,12 @@ public class frmUsuario extends javax.swing.JFrame {
         }
         */
         
-        /*for (Permissao p : permissoes) {
+        for (Permissao p : permissoes) {
             if (p.getPermissao().equalsIgnoreCase(cmbPermissao.getSelectedItem().toString())) {
                 idPermissao = p.getId();
                 break; // achou, pode parar
             }
-        }*/
+        }
         
         
         try {       
@@ -576,7 +583,8 @@ public class frmUsuario extends javax.swing.JFrame {
             usuario.setEmail(txtEmail.getText());
             usuario.setCelular(ftxtCelular.getText());
             usuario.setidPermissao(idPermissao);
-            usuario.setSenha(ptxtSenha.getText());
+            usuario.setSenha(Seguranca.hashSenha(ptxtSenha.getText()));
+            usuario.setAltersenha(1);
             usuario.setData(new Date());
                  
             int linha = usuarioDAO.inserir(usuario);
@@ -697,7 +705,7 @@ public class frmUsuario extends javax.swing.JFrame {
                 break; // achou, pode parar
             }
         }
-
+        
         try {
             // Cria o objeto Usuario com os dados dos campos
             Usuario usuario = new Usuario();
@@ -707,7 +715,8 @@ public class frmUsuario extends javax.swing.JFrame {
             usuario.setEmail(txtEmail.getText());
             usuario.setCelular(ftxtCelular.getText());
             usuario.setidPermissao(idPermissao);
-            usuario.setSenha(ptxtSenha.getText()); // Se houver campo senha
+            usuario.setSenha(Seguranca.hashSenha(ptxtSenha.getText())); // Se houver campo senha
+            usuario.setAltersenha(1);
             // Chama a função editar
             UsuarioDAO usuarioDAO = DAOFactory.criarUsuarioDAO();
             int resultado = usuarioDAO.editar(usuario);
@@ -811,6 +820,10 @@ public class frmUsuario extends javax.swing.JFrame {
     private void cmbPermissaoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbPermissaoKeyPressed
         ptxtSenha.requestFocus();
     }//GEN-LAST:event_cmbPermissaoKeyPressed
+
+    private void ptxtSenhaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ptxtSenhaMouseClicked
+        ptxtSenha.selectAll();
+    }//GEN-LAST:event_ptxtSenhaMouseClicked
    
     //Limpa os campos da tabela e reseta combobox.
     private void limparCampos(){
@@ -823,6 +836,8 @@ public class frmUsuario extends javax.swing.JFrame {
         txtNome.requestFocus();
     }
     
+    
+   
     private void carregarUsuario(int id) {
         UsuarioDAO usuarioDAO = DAOFactory.criarUsuarioDAO();
         Usuario usuario = usuarioDAO.listar(id); // chama a função que você forneceu
@@ -858,7 +873,8 @@ public class frmUsuario extends javax.swing.JFrame {
             txtEmail.setText(usuario.getEmail());
             ftxtCelular.setText(usuario.getCelular());
             ptxtSenha.setText(usuario.getSenha());
-            
+          
+         
             tNome = txtNome.getText();
             tUsuario = txtUsuario.getText();
             tEmail = txtEmail.getText();

@@ -230,6 +230,9 @@
           </Events>
         </Component>
         <Component class="javax.swing.JPasswordField" name="ptxtSenha">
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="ptxtSenhaMouseClicked"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JComboBox" name="cmbPermissao">
           <Properties>
@@ -257,7 +260,7 @@
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
               <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace min="34" max="32767" attributes="0"/>
                   <Component id="btnInserir" min="-2" pref="97" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="btnEditar" min="-2" pref="96" max="-2" attributes="0"/>

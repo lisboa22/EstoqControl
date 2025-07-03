@@ -9,16 +9,19 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 
 
+
 /**
  *
  * @author robson
  */
 public class frmPrincipal extends javax.swing.JFrame {
 
+    private int permissao;
     /**
      * Creates new form frmPrincipla
      */
-    public frmPrincipal() {
+    public frmPrincipal(int permissao) {
+        this.permissao = permissao;
         initComponents();
         
         // Define o layout do JFrame como GridBagLayout
@@ -42,6 +45,15 @@ public class frmPrincipal extends javax.swing.JFrame {
         /*getContentPane().setLayout(new GridBagLayout());
         getContentPane().remove(jPanel1);
         getContentPane().add(jPanel1, new GridBagConstraints());*/
+        
+        System.out.println(""+permissao);
+        
+        if (permissao == 1){
+            btnUsuario.setEnabled(true);
+        }
+        if (permissao == 1 || permissao == 2){
+            btnEquipamento.setEnabled(true);
+        }
     }
 
     /**
@@ -89,6 +101,7 @@ public class frmPrincipal extends javax.swing.JFrame {
         btnEquipamento.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnEquipamento.setIcon(new javax.swing.ImageIcon("C:\\Users\\robson.SRVLISBOAINFO\\Desktop\\ProjPOO\\EstoqControl\\src\\recurso\\gerador-eletrico.png")); // NOI18N
         btnEquipamento.setText("Equipamentos");
+        btnEquipamento.setEnabled(false);
         btnEquipamento.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnEquipamento.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         btnEquipamento.addActionListener(new java.awt.event.ActionListener() {
@@ -100,6 +113,7 @@ public class frmPrincipal extends javax.swing.JFrame {
         btnUnidade.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnUnidade.setIcon(new javax.swing.ImageIcon("C:\\Users\\robson.SRVLISBOAINFO\\Desktop\\ProjPOO\\EstoqControl\\src\\recurso\\casa-limpa.png")); // NOI18N
         btnUnidade.setText("Unidades");
+        btnUnidade.setEnabled(false);
         btnUnidade.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnUnidade.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         btnUnidade.addActionListener(new java.awt.event.ActionListener() {
@@ -111,6 +125,7 @@ public class frmPrincipal extends javax.swing.JFrame {
         btnUsuario.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnUsuario.setIcon(new javax.swing.ImageIcon("C:\\Users\\robson.SRVLISBOAINFO\\Desktop\\ProjPOO\\EstoqControl\\src\\recurso\\adicionar-usuario-botao.png")); // NOI18N
         btnUsuario.setText("Usuários");
+        btnUsuario.setEnabled(false);
         btnUsuario.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnUsuario.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         btnUsuario.addActionListener(new java.awt.event.ActionListener() {
@@ -122,12 +137,14 @@ public class frmPrincipal extends javax.swing.JFrame {
         jButton4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jButton4.setIcon(new javax.swing.ImageIcon("C:\\Users\\robson.SRVLISBOAINFO\\Desktop\\ProjPOO\\EstoqControl\\src\\recurso\\movimentacao-de-carga.png")); // NOI18N
         jButton4.setText("Movimentação");
+        jButton4.setEnabled(false);
         jButton4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton4.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 
         btnPermissao.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnPermissao.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recurso/chaveiro.png"))); // NOI18N
         btnPermissao.setText("Permissões");
+        btnPermissao.setEnabled(false);
         btnPermissao.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnPermissao.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         btnPermissao.addActionListener(new java.awt.event.ActionListener() {
@@ -139,6 +156,7 @@ public class frmPrincipal extends javax.swing.JFrame {
         btnMarca.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnMarca.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recurso/fabrica.png"))); // NOI18N
         btnMarca.setText("Fabricante");
+        btnMarca.setEnabled(false);
         btnMarca.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnMarca.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         btnMarca.addActionListener(new java.awt.event.ActionListener() {
@@ -374,7 +392,8 @@ public class frmPrincipal extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 // Inicia a janela maximizada
-                new frmPrincipal().setVisible(true);
+                //new frmPrincipal(permissao).setVisible(true);
+                
                 
             }
         });

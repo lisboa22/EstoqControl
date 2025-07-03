@@ -6,6 +6,15 @@
             <file>file:/C:/Users/robson.SRVLISBOAINFO/Desktop/ProjPOO/EstoqControl/src/aplicacao/frmPrincipal.java</file>
             <file>file:/C:/Users/robson.SRVLISBOAINFO/Desktop/ProjPOO/EstoqControl/src/aplicacao/frmUsuario.java</file>
             <file>file:/C:/Users/robson.SRVLISBOAINFO/Desktop/ProjPOO/EstoqControl/src/aplicacao/frmEquipamento.java</file>
+            <file>file:/C:/Users/robson.SRVLISBOAINFO/Desktop/ProjPOO/EstoqControl/src/aplicacao/Seguranca.java</file>
+            <file>file:/C:/Users/robson.SRVLISBOAINFO/Desktop/ProjPOO/EstoqControl/src/aplicacao/frmLogin.java</file>
+            <file>file:/C:/Users/robson.SRVLISBOAINFO/Desktop/ProjPOO/EstoqControl/src/modelo/Login.java</file>
+            <file>file:/C:/Users/robson.SRVLISBOAINFO/Desktop/ProjPOO/EstoqControl/src/modelo/Fabricante.java</file>
+            <file>file:/C:/Users/robson.SRVLISBOAINFO/Desktop/ProjPOO/EstoqControl/src/modelo/Usuario.java</file>
+            <file>file:/C:/Users/robson.SRVLISBOAINFO/Desktop/ProjPOO/EstoqControl/src/modelo/Unidade.java</file>
+            <file>file:/C:/Users/robson.SRVLISBOAINFO/Desktop/ProjPOO/EstoqControl/src/dao/UsuarioDAOJDBC.java</file>
+            <file>file:/C:/Users/robson.SRVLISBOAINFO/Desktop/ProjPOO/EstoqControl/src/dao/UsuarioDAO.java</file>
+            <file>file:/C:/Users/robson.SRVLISBOAINFO/Desktop/ProjPOO/EstoqControl/src/dao/DAOFactory.java</file>
         </group>
     </open-files>
 </project-private>

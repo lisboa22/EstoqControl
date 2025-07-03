@@ -18,6 +18,7 @@ public interface UsuarioDAO {
     public List<Usuario> listar();
     public Usuario listar(int id);
     public int editar(Usuario usuario);
+    public int editarSenha(Usuario usuario);
     public int apagar(int id) throws ClassNotFoundException, SQLException, SQLIntegrityConstraintViolationException;
     
 }

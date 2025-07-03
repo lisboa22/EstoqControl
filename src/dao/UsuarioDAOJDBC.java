@@ -32,8 +32,8 @@ public class UsuarioDAOJDBC implements UsuarioDAO{
     public int inserir(Usuario usuario) throws ClassNotFoundException, SQLException, SQLIntegrityConstraintViolationException {
         StringBuilder sqlBuilder = new StringBuilder();
         sqlBuilder
-                .append("insert into usuarios(nome, usuario, email, celular, id_permissao, senha, data) ")
-                .append("VALUES (?, ?, ?, ?, ?, ?, ?)");
+                .append("insert into usuarios(nome, usuario, email, celular, id_permissao, senha, altersenha, data) ")
+                .append("VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
         String insert = sqlBuilder.toString();
         int linha = 0;
         try {  
@@ -43,6 +43,7 @@ public class UsuarioDAOJDBC implements UsuarioDAO{
                                                         usuario.getCelular(),
                                                         usuario.getidPermissao(),
                                                         usuario.getSenha(),
+                                                        usuario.getAltersenha(),
                                                         usuario.getData()
                                                         );
         } catch (SQLIntegrityConstraintViolationException ex) {
@@ -75,6 +76,7 @@ public class UsuarioDAOJDBC implements UsuarioDAO{
                 usuario.setCelular(rset.getString("celular"));
                 usuario.setidPermissao(rset.getInt("id_permissao"));
                 usuario.setSenha(rset.getString("senha"));
+                usuario.setAltersenha(rset.getInt("altersenha"));
                 usuario.setData(rset.getDate("data"));
                 usuarios.add(usuario);
             }
@@ -102,6 +104,7 @@ public class UsuarioDAOJDBC implements UsuarioDAO{
                 usuario.setCelular(rset.getString("celular"));
                 usuario.setidPermissao(rset.getInt("id_permissao"));
                 usuario.setSenha(rset.getString("senha"));
+                usuario.setAltersenha(rset.getInt("altersenha"));
                 usuario.setData(rset.getDate("data"));
             }
         } catch (Exception e) {
@@ -121,7 +124,8 @@ public class UsuarioDAOJDBC implements UsuarioDAO{
                 .append("email = ?, ")
                 .append("celular = ?, ")
                 .append("id_permissao = ?, ")
-                .append("senha = ? ")
+                .append("senha = ?, ")
+                .append("altersenha = ? ")
                 .append("WHERE id = ?");
         String update = sqlBuilder.toString();
         int linha = 0;
@@ -132,6 +136,28 @@ public class UsuarioDAOJDBC implements UsuarioDAO{
                                                         usuario.getCelular(),
                                                         usuario.getidPermissao(),
                                                         usuario.getSenha(),
+                                                        usuario.getAltersenha(),
+                                                        usuario.getId());
+        } catch (Exception e) { 
+            e.printStackTrace();
+        } 
+        return linha; 
+    }
+    
+    //Editar Senha
+    @Override
+    public int editarSenha(Usuario usuario) {
+      StringBuilder sqlBuilder = new StringBuilder();
+        sqlBuilder
+                .append("UPDATE usuarios SET ")
+                .append("senha = ?, ")
+                .append("altersenha = ? ")
+                .append("WHERE id = ?");
+        String update = sqlBuilder.toString();
+        int linha = 0;
+        try {
+            linha = DAOGenerico.executarComando(update, usuario.getSenha(),
+                                                        usuario.getAltersenha(),
                                                         usuario.getId());
         } catch (Exception e) { 
             e.printStackTrace();

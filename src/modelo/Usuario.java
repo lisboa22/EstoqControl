@@ -18,6 +18,7 @@ public class Usuario {
     private String celular;
     private int id_permissao;
     private String senha;
+    private int altersenha;
     private Date data;
 
     public int getId() {
@@ -75,6 +76,14 @@ public class Usuario {
     public void setSenha(String senha) {
         this.senha = senha;
     }
+    
+    public int getAltersenha() {
+        return altersenha;
+    }
+
+    public void setAltersenha(int altersenha) {
+        this.altersenha = altersenha;
+    }
 
     public Date getData() {
         return data;
@@ -86,8 +95,11 @@ public class Usuario {
 
     @Override
     public String toString() {
-        return "Usuario{" + "id=" + id + ", nome=" + nome + ", usuario=" + usuario + ", email=" + email + ", celular=" + celular + ", funcao=" + id_permissao + ", senha=" + senha + ", data=" + data + '}';
+        return "Usuario{" + "id=" + id + ", nome=" + nome + ", usuario=" + usuario + ", email=" + email + ", celular=" + celular + ", funcao=" + id_permissao + ", senha=" + senha + ", altersenha=" + altersenha + ", data=" + data + '}';
     }
+
+  
+    
     
     
 }
